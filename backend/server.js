@@ -3,10 +3,16 @@ const app = express();
 const utils = require("./util");
 const net = require("node:net");
 
-app.use(function(req, res, next) {
-  res.setHeader('access-control-allow-origin', '*')
-  next();
-});
+if (process.env.DEV) {
+  app.listen(8998, "127.0.0.1", function() {
+    console.log("backend listening on port 8998 (@ 127.0.0.1)");
+  });
+
+  app.use(function(req, res, next) {
+    res.setHeader('access-control-allow-origin', '*')
+    next();
+  });
+}
 
 app.get("/api/lookup", async function(req, res) {
   const queryDomain = req.query.domain
@@ -38,6 +44,4 @@ app.get("/api/lookup", async function(req, res) {
   }
 });
 
-app.listen(8998, "127.0.0.1", function() {
-  console.log("backend listening on port 8998 (@ 127.0.0.1)");
-});
+module.exports = app

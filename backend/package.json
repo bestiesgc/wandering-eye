@@ -4,6 +4,7 @@
   "description": "A tool for finding information on how to stop malicious websites.",
   "main": "server.js",
   "scripts": {
+    "dev": "DEV=true node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
