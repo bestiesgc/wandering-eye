@@ -6,7 +6,8 @@
     export let pattern = undefined
     export let placeholder = ''
     export let invalidMessage = 'Input is invalid'
-    let inputValue = undefined
+    export let value = undefined
+    let inputValue = value??undefined
     let iconName = 'search'
 
     let disabled = true
@@ -29,17 +30,20 @@
     }
 </script>
 
-<form disabled={disabled} class="search-input" on:submit={onSubmitWrapper}>
-    <input {placeholder} {pattern} type="text" bind:value={inputValue} on:input={onInput}>
-    <button type="submit" disabled={disabled||invalid}>
-        <span class="material-icons">
-            {iconName}
-        </span>
-    </button>
-</form>
 
-{#if invalid&&!disabled}
-    <div class="warning-message" transition:slide>
-        {invalidMessage}
-    </div>
-{/if}
+<div class="search-input-container">
+    <form disabled={disabled} class="search-input" on:submit={onSubmitWrapper}>
+        <input {placeholder} {pattern} type="text" bind:value={inputValue} on:input={onInput}>
+        <button type="submit" disabled={disabled||invalid}>
+            <span class="material-icons">
+                {iconName}
+            </span>
+        </button>
+    </form>
+    
+    {#if invalid&&!disabled}
+        <div class="warning-message" transition:slide>
+            {invalidMessage}
+        </div>
+    {/if}
+</div>
