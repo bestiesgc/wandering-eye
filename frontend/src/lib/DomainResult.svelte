@@ -28,7 +28,7 @@
     <h3>IP Addresses</h3>
     <div class="ip-container-list">
         {#each domainResult.ipAddresses as ip}
-            <div class="ip-container">
+            <div class="ip-container" class:has-geo={ip.geo}>
                 {#if ip.geo}
                     <Leaflet ll={ip.geo.ll}></Leaflet>
                 {/if}
