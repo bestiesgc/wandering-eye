@@ -12,11 +12,24 @@
     <h2>{domainResult.domain}</h2>
     {#if domainResult.whois}
         <h3>Registrar</h3>
+        <p>{domainResult.whois['Registrar']}</p>
         <a class="registrar-link" href={domainResult.whois['Registrar URL']}>
             <span class="material-icons">
                 link
             </span>
-            {domainResult.whois['Registrar']}
+            {domainResult.whois['Registrar URL'].split('://').pop()}
+        </a>
+        <a class="registrar-link" href="tel:{domainResult.whois['Registrar Abuse Contact Email']}">
+            <span class="material-icons">
+                mail
+            </span>
+            {domainResult.whois['Registrar Abuse Contact Email']}
+        </a>
+        <a class="registrar-link" href="tel:{domainResult.whois['Registrar Abuse Contact Phone']}">
+            <span class="material-icons">
+                phone
+            </span>
+            {domainResult.whois['Registrar Abuse Contact Phone']}
         </a>
         <h3>Name Servers</h3>
         <ul class="name-server-list">
@@ -24,6 +37,12 @@
                 <li class="name-server">{nameServer}</li>
             {/each}
         </ul>
+    {/if}
+    {#if domainResult.cname}
+        <h3>{'CNAME (alias)'}</h3>
+        {#each domainResult.cname as cname}
+            <ul>{cname}</ul>
+        {/each}
     {/if}
     <h3>IP Addresses</h3>
     <div class="ip-container-list">
