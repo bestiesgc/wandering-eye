@@ -53,9 +53,16 @@
                 {/if}
                 <div class="ip-meta">
                     <h4 class="ip-meta_address">{ip.value}</h4>
-                    <p>Organization: {ip.whois.Organization}</p>
-                    <p>Updated: {ip.whois.Updated}</p>
-                    <p>Abuse Contact: {ip.whois.contactAbuse.OrgAbuseEmail}</p>
+                    {#if ip.whois?.Organization}
+                        <hr>
+                        <p>Organization: {ip.whois.Organization}</p>
+                        {#if ip.whois.Updated}
+                            <p>Updated: {ip.whois.Updated}</p>
+                        {/if}
+                        {#if ip.whois.contactAbuse}
+                            <p>Abuse Contact: {ip.whois.contactAbuse.OrgAbuseEmail}</p>
+                        {/if}
+                    {/if}
                 </div>
             </div>
         {/each}

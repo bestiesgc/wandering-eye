@@ -4,7 +4,6 @@
     import lookup from './parseLookup.js'
     import DomainSearch from '$lib/DomainSearch.svelte'
     import DomainResult from '$lib/DomainResult.svelte'
-    import { onMount } from 'svelte'
     let data
     let domain
     $: {
@@ -13,15 +12,13 @@
     }
     let ready = false
     async function loadDomain() {
+        ready = false
         if (browser) {
-            ready = false
             data = await lookup(domain)
+            console.log('data', data)
             ready = true
         }
     }
-    onMount(async () => {
-        await loadDomain()
-    })
 </script>
 
 
@@ -34,9 +31,16 @@
         <DomainSearch value={domain}></DomainSearch>
     {/key}
     {#if ready}
-        {#each data.domains as domainResult}
-            <DomainResult {domainResult}></DomainResult>
-        {/each}
+        {#if data.success===true}
+            {#each data.domains as domainResult}
+                <DomainResult {domainResult}></DomainResult>
+            {/each}
+        {:else}
+            <div class="warning-message">
+                <h2>Error</h2>
+                <p>{data.message}</p>
+            </div>
+        {/if}
     {:else}
         <p>Loading results</p>
     {/if}

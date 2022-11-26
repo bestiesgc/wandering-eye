@@ -1,8 +1,9 @@
 function parseDomainList(domainResults, ipResults) {
+    console.log(ipResults)
     return domainResults.map(e => {
         if (!e) return e
         if (Object.keys(e).length===1) return false // if no keys beyond the domain prop, return false
-        e.ipAddresses = e.ipAddresses.map(e => ipResults[e])
+        e.ipAddresses = e.ipAddresses.flat().map(e => ipResults[e]).filter(e => e) // filtering out undefined
         return e
     })
     .filter(e => e) // filtering out false values
@@ -27,9 +28,16 @@ export default async function lookup(domain) {
         apiUrl = 'http://127.0.0.1:8998/api'
     }
     let apiReq = await fetch(`${apiUrl}/lookup?domain=${encodeURIComponent(domain)}`)
-
+    const json = await apiReq.json()
+    if (json.success) {
+        return {
+            domain,
+            success: true,
+            ...parseLookup(json)
+        }
+    }
     return {
         domain,
-        ...parseLookup(await apiReq.json())
+        ...json
     }
 }
