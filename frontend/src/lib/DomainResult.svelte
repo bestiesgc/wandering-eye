@@ -40,9 +40,11 @@
     {/if}
     {#if domainResult.cname}
         <h3>{'CNAME (alias)'}</h3>
-        {#each domainResult.cname as cname}
-            <ul>{cname}</ul>
-        {/each}
+        <ul>
+            {#each domainResult.cname as cname}
+                <ul>{cname}</ul>
+            {/each}
+        </ul>
     {/if}
     <h3>IP Addresses</h3>
     <div class="ip-container-list">
