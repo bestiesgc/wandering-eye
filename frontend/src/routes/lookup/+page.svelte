@@ -37,8 +37,10 @@
             {/each}
         {:else}
             <div class="warning-message">
-                <h2>Error</h2>
                 <p>{data.message}</p>
+                {#if data.errorCode==='internal'}
+                    <button on:click={loadDomain}>Try again</button>
+                {/if}
             </div>
         {/if}
     {:else}
