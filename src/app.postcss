@@ -227,6 +227,7 @@ input, button {
     gap: 1rem;
     align-items: flex-start;
     overflow-x: auto;
+	grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
 }
 
 .ip-container {
@@ -265,11 +266,7 @@ input, button {
     .result-item {
         width: unset;
     }
-    .ip-container:last-child {
-        grid-column: 2;
-    }
     .ip-container {
-        width: 20rem;
         height: 100%;
     }
     .ip-container.has-geo {
