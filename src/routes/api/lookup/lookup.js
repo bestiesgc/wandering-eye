@@ -64,7 +64,9 @@ export default async function lookup(host, ip) {
 			from: host
 		}
 
-		data.domainResults.push(wwwDomain)
+		if (wwwDomain.cname || wwwDomain.ipAddresses.length != 0) {
+			data.domainResults.push(wwwDomain)
+		}
 	}
 
 	for (let domainI in data.domainResults) {
