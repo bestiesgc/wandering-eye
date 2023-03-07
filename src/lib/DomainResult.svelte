@@ -59,8 +59,8 @@
 						{#if ip.type}
 							<p><b>Type</b>: {ip.type}</p>
 						{/if}
-						{#if ip.hostnames}
-							<p><b>Hostname(s)</b>: {ip.hostnames}</p>
+						{#if ip.hostname}
+							<p><b>Hostname(s)</b>: {ip.hostname}</p>
 						{/if}
 						<p><b>Organization</b>: {ip.whois.Organization}</p>
 						{#if ip.whois.Updated}
