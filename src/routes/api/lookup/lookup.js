@@ -44,7 +44,7 @@ export default async function lookup(host, ip) {
 		data.result.whois = (await whois.ip(host)) || null
 		return data
 	}
-	
+
 	// if input isnt an ip lookup
 	// dns check
 	let newDomain = await domainToResult(host)
@@ -70,11 +70,13 @@ export default async function lookup(host, ip) {
 	for (let domainI in data.domainResults) {
 		for (let ipI in data.domainResults[domainI].ipAddresses) {
 			let ip = data.domainResults[domainI].ipAddresses[ipI]
-			data.domainResults[domainI].ipAddresses[ipI] = {
+			let ipInfo = {
 				value: ip,
-				geo: (await geoip.lookup(ip)) || null,
 				whois: (await whois.ip(ip)) || null
 			}
+			let geolocation = await geoip.lookup(ip)
+			if (geolocation&&geolocation.ll[0]!=37.751&&geolocation.ll[1]!=-97.822) ipInfo.geo = geolocation
+			data.domainResults[domainI].ipAddresses[ipI] = ipInfo
 		}
 	}
 
