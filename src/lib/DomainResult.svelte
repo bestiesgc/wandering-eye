@@ -37,7 +37,7 @@
         <h3>{'CNAME (alias)'}</h3>
         <ul>
             {#each domainResult.cname as cname}
-                <ul>{cname}</ul>
+                <li>{cname}</li>
             {/each}
         </ul>
     {/if}
