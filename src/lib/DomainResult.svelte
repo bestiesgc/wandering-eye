@@ -1,6 +1,7 @@
 <script>
 	export let domainResult
-	import IpResult from './IpResult.svelte'
+	import IpResult from '$lib/IpResult.svelte'
+	import LinkWithIcon from '$lib/LinkWithIcon.svelte'
 </script>
 
 <div class="result-item">
@@ -8,27 +9,30 @@
 	{#if domainResult.whois}
 		<h3>Registrar</h3>
 		<p>{domainResult.whois['Registrar']}</p>
-		<a class="registrar-link" href={domainResult.whois['Registrar URL']}>
-			<span class="material-icons"> link </span>
+		<LinkWithIcon
+			icon="link"
+			class="registrar-link"
+			href={domainResult.whois['Registrar URL']}
+		>
 			{domainResult.whois['Registrar URL'].split('://').pop()}
-		</a>
+		</LinkWithIcon>
 		{#if domainResult.whois['Registrar Abuse Contact Email']}
-			<a
+			<LinkWithIcon
+				icon="mail"
 				class="registrar-link"
 				href="mailto:{domainResult.whois['Registrar Abuse Contact Email']}"
 			>
-				<span class="material-icons"> mail </span>
 				{domainResult.whois['Registrar Abuse Contact Email']}
-			</a>
+			</LinkWithIcon>
 		{/if}
 		{#if domainResult.whois['Registrar Abuse Contact Phone']}
-			<a
+			<LinkWithIcon
+				icon="phone"
 				class="registrar-link"
 				href="tel:{domainResult.whois['Registrar Abuse Contact Phone']}"
 			>
-				<span class="material-icons"> phone </span>
 				{domainResult.whois['Registrar Abuse Contact Phone']}
-			</a>
+			</LinkWithIcon>
 		{/if}
 		<h3>Name Servers</h3>
 		<ul class="name-server-list">
