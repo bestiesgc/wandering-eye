@@ -3,6 +3,10 @@
 	import DomainSearch from '$lib/DomainSearch.svelte'
 </script>
 
+<svelte:head>
+	<title>wandering-eye</title>
+</svelte:head>
+
 <CenterPage>
 	<h1>wandering-eye</h1>
 	<p>Easily retrieve information on any domain.</p>

@@ -26,6 +26,12 @@
 	}
 </script>
 
+<svelte:head>
+	{#if domain}<title>{domain} | wandering-eye</title>
+	{:else}<title>wandering-eye</title>
+	{/if}
+</svelte:head>
+
 <CenterPage class="results-page">
 	<a class="home-link" href="/">
 		<h1>wandering-eye</h1>
