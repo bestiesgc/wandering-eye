@@ -25,6 +25,7 @@
 		e.preventDefault()
 		iconName = 'hourglass_empty'
 		dispatch('submit', { value: inputValue, ...e })
+		value = inputValue
 		await onSubmit?.({ value: inputValue, ...e })
 		iconName = 'search'
 	}

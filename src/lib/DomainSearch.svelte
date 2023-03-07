@@ -8,7 +8,7 @@
 </script>
 
 <SearchInput
-	{value}
+	bind:value
 	onSubmit={lookupDomain}
 	pattern="(\S+\.)+\S\S+"
 	placeholder="example.com"
