@@ -19,7 +19,7 @@
             </span>
             {domainResult.whois['Registrar URL'].split('://').pop()}
         </a>
-        <a class="registrar-link" href="tel:{domainResult.whois['Registrar Abuse Contact Email']}">
+        <a class="registrar-link" href="mailto:{domainResult.whois['Registrar Abuse Contact Email']}">
             <span class="material-icons">
                 mail
             </span>
