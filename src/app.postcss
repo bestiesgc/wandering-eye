@@ -62,7 +62,7 @@ input, button {
     border: none;
     color: inherit;
     padding: 0.5rem;
-    font-size: inherit;
+    font: inherit;
 }
 
 :first-child {
@@ -109,11 +109,20 @@ input, button {
 }
 
 .center-page-container {
-    position: fixed;
-    inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+	padding: 2rem;
+	min-height: 100vh;
+	min-height: 100svh;
+}
+
+.results-page .center-page-contents {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
 .search-input-container {
@@ -188,11 +197,13 @@ input, button {
 }
 
 .result-item-list {
+    width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 1rem;
-    align-items: center;
-    padding: 2rem;
+	justify-content: center;
+	align-items: flex-start;
 }
 
 .result-item {

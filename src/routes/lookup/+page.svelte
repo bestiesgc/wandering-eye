@@ -1,6 +1,7 @@
 <script>
-    import { browser } from '$app/environment';
+    import { browser } from '$app/environment'
     import { page } from '$app/stores'
+    import CenterPage from '$lib/CenterPage.svelte'
     import DomainSearch from '$lib/DomainSearch.svelte'
     import DomainResult from '$lib/DomainResult.svelte'
     let data
@@ -23,9 +24,7 @@
     }
 </script>
 
-
-
-<div class="result-item-list">
+<CenterPage class="results-page">
     <a class="home-link" href="/">
         <h1>wandering-eye</h1>
     </a>
@@ -34,9 +33,11 @@
     {/key}
     {#if ready}
         {#if success===true}
-            {#each data.domainResults as domainResult}
-                <DomainResult {domainResult}></DomainResult>
-            {/each}
+            <div class="result-item-list">
+                {#each data.domainResults as domainResult}
+                    <DomainResult {domainResult}></DomainResult>
+                {/each}
+            </div>
         {:else}
             <div class="warning-message">
                 <p>{data.message}</p>
@@ -48,4 +49,5 @@
     {:else}
         <p>Loading results</p>
     {/if}
-</div>
+    
+</CenterPage>
