@@ -6,11 +6,11 @@ import axios from 'axios'
 import * as cheerio from 'cheerio'
 
 async function domainToResult(host) {
-	let newDomain = {
+	const newDomain = {
 		domain: host
 	}
 
-	let dns = await dnsLookup(host)
+	const dns = await dnsLookup(host)
 	newDomain.cname = dns.cname
 
 	newDomain.ipAddresses = []
@@ -30,7 +30,7 @@ async function domainToResult(host) {
 }
 
 export default async function lookup(host, ip) {
-	let data = {}
+	const data = {}
 
 	if (ip == true) {
 		data['type'] = 'ip'
@@ -49,7 +49,7 @@ export default async function lookup(host, ip) {
 
 	// if input isnt an ip lookup
 	// dns check
-	let newDomain = await domainToResult(host)
+	const newDomain = await domainToResult(host)
 	newDomain.reason = { code: 'query' }
 
 	// maybe include mx lookup too?
@@ -59,8 +59,8 @@ export default async function lookup(host, ip) {
 
 	if (isApex(host)) {
 		// includes www.
-		let nh = `www.${host}`
-		let wwwDomain = await domainToResult(nh)
+		const nh = `www.${host}`
+		const wwwDomain = await domainToResult(nh)
 		wwwDomain.reason = {
 			code: 'apex-check-www',
 			from: host
@@ -71,12 +71,12 @@ export default async function lookup(host, ip) {
 		}
 	}
 
-	for (let domainI in data.domainResults) {
-		for (let ipI in data.domainResults[domainI].ipAddresses) {
-			let ip = data.domainResults[domainI].ipAddresses[ipI]
-			let abIpDb = await aipdb(ip)
-			let urlHausIpReport = await urlhaus(ip)
-			let ipInfo = {
+	for (const domainI in data.domainResults) {
+		for (const ipI in data.domainResults[domainI].ipAddresses) {
+			const ip = data.domainResults[domainI].ipAddresses[ipI]
+			const abIpDb = await aipdb(ip)
+			const urlHausIpReport = await urlhaus(ip)
+			const ipInfo = {
 				value: ip,
 				whois: (await whois.ip(ip)) || null,
 				type: abIpDb.data?.usageType,
@@ -86,7 +86,7 @@ export default async function lookup(host, ip) {
 					urlhaus: urlHausIpReport
 				}
 			}
-			let geolocation = await geoip.lookup(ip)
+			const geolocation = await geoip.lookup(ip)
 			if (
 				geolocation &&
 				geolocation.ll[0] != 37.751 &&
@@ -101,61 +101,56 @@ export default async function lookup(host, ip) {
 }
 
 async function dnsLookup(host) {
+	dns.setServers([`8.8.8.8`, `1.1.1.1`]) // force servers to google and cloudflare
+	let cname
 	try {
-		dns.setServers([`8.8.8.8`, `1.1.1.1`]) // force servers to google and cloudflare
-
-		let cname
-		try {
-			cname = await dns.resolveCname(host)
-		} catch (err) {
-			cname = null
-		}
-
-		let v4addr
-		try {
-			v4addr = await dns.resolve4(host)
-		} catch (err) {
-			v4addr = null
-		}
-
-		let v6addr
-		try {
-			v6addr = await dns.resolve6(host)
-		} catch (err) {
-			v6addr = null
-		}
-
-		return {
-			cname,
-			v4addr,
-			v6addr
-		}
+		cname = await dns.resolveCname(host)
 	} catch (err) {
-		throw err
+		cname = null
+	}
+
+	let v4addr
+	try {
+		v4addr = await dns.resolve4(host)
+	} catch (err) {
+		v4addr = null
+	}
+
+	let v6addr
+	try {
+		v6addr = await dns.resolve6(host)
+	} catch (err) {
+		v6addr = null
+	}
+
+	return {
+		cname,
+		v4addr,
+		v6addr
 	}
 }
 
 function isApex(host) {
-	let parsed = psl.parse(host)
+	const parsed = psl.parse(host)
 	if (parsed.subdomain == null) return true
 	else return false
 }
 
 async function aipdb(ip) {
 	try {
-		let resp = await axios({
+		const resp = await axios({
 			url: `https://www.abuseipdb.com/check/${encodeURIComponent(ip)}`,
 			headers: {
 				'User-Agent':
 					'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/110.0'
 			}
 		})
-		let $ = cheerio.load(resp.data)
+		const $ = cheerio.load(resp.data)
 
-		let titles = []
-		let data = {}
+		const titles = []
+		const data = {}
 
-		for (let i in $('#report-wrapper table > tbody > tr > th')) {
+		for (const i in $('#report-wrapper table > tbody > tr > th')) {
 			if (
 				$('#report-wrapper table > tbody > tr > th')?.[i]?.children?.[0]?.data
 			) {
@@ -164,7 +159,7 @@ async function aipdb(ip) {
 					.replace(`(s)`, `s`)
 				if (title.includes(` `)) {
 					title = title.split(` `)
-					for (let a in title) {
+					for (const a in title) {
 						if (a > 0)
 							title[a] =
 								title[a].substring(0, 1).toUpperCase() + title[a].substring(1)
@@ -175,12 +170,12 @@ async function aipdb(ip) {
 			}
 		}
 
-		for (let i in titles) {
-			let title = titles[i]
+		for (const i in titles) {
+			const title = titles[i]
 			if (
 				$('#report-wrapper table > tbody > tr > td')?.[i]?.children?.[0]?.data
 			) {
-				let content = $('#report-wrapper table > tbody > tr > td')?.[i]
+				const content = $('#report-wrapper table > tbody > tr > td')?.[i]
 					?.children?.[0]?.data
 				data[title] = content.split(`\n`).join(``)
 			}
@@ -205,13 +200,13 @@ async function aipdb(ip) {
 
 async function urlhaus(ip) {
 	try {
-		let resp = await axios({
+		const resp = await axios({
 			method: `POST`,
 			url: `https://urlhaus-api.abuse.ch/v1/host/`,
 			data: `host=${encodeURIComponent(ip)}`
 		})
 		let count = 0
-		for (let i in resp.data?.urls) {
+		for (const i in resp.data?.urls) {
 			if (resp?.data?.urls[i]?.url_status == 'online') count = count + 1
 		}
 		return count

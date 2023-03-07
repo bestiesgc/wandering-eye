@@ -14,7 +14,7 @@
 	async function loadDomain(domain) {
 		ready = false
 		if (browser) {
-			let apiReq = await fetch(
+			const apiReq = await fetch(
 				`/api/lookup?domain=${encodeURIComponent(domain)}`
 			)
 			const json = await apiReq.json()
