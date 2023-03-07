@@ -5,7 +5,7 @@ import lookup from './lookup.js'
 export async function GET({ url }) {
 	const queryDomain = url.searchParams.get('domain')
 	if (!queryDomain) {
-		return error(400, 'noQueryDomain')
+		throw error(400, 'noQueryDomain')
 	}
 
 	let isIp = net.isIP(queryDomain)
@@ -13,12 +13,8 @@ export async function GET({ url }) {
 	else isIp = false
 
 	try {
-		let lookupResult = await lookup(queryDomain, isIp)
-		return json({
-			success: true,
-			...lookupResult
-		})
+		return json(await lookup(queryDomain, isIp))
 	} catch (err) {
-		return error(500, err.message || err.code)
+		throw error(500, err.message || err.code)
 	}
 }
