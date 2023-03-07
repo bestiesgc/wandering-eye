@@ -1,11 +1,6 @@
 <script>
     export let domainResult
-    import Leaflet from './Leaflet.svelte';
-    // import {onMount} from 'svelte'
-    // let Leaflet = null
-    // onMount(async () => {
-    //     Leaflet = await import('$lib/Leaflet.svelte')
-    // })
+    import Leaflet from './Leaflet.svelte'
 </script>
 
 <div class="result-item">
