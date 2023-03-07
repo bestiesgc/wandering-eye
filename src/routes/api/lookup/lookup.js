@@ -75,7 +75,12 @@ export default async function lookup(host, ip) {
 				whois: (await whois.ip(ip)) || null
 			}
 			let geolocation = await geoip.lookup(ip)
-			if (geolocation&&geolocation.ll[0]!=37.751&&geolocation.ll[1]!=-97.822) ipInfo.geo = geolocation
+			if (
+				geolocation &&
+				geolocation.ll[0] != 37.751 &&
+				geolocation.ll[1] != -97.822
+			)
+				ipInfo.geo = geolocation
 			data.domainResults[domainI].ipAddresses[ipI] = ipInfo
 		}
 	}
