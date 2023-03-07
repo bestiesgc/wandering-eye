@@ -12,20 +12,24 @@
 			<span class="material-icons"> link </span>
 			{domainResult.whois['Registrar URL'].split('://').pop()}
 		</a>
-		<a
-			class="registrar-link"
-			href="mailto:{domainResult.whois['Registrar Abuse Contact Email']}"
-		>
-			<span class="material-icons"> mail </span>
-			{domainResult.whois['Registrar Abuse Contact Email']}
-		</a>
-		<a
-			class="registrar-link"
-			href="tel:{domainResult.whois['Registrar Abuse Contact Phone']}"
-		>
-			<span class="material-icons"> phone </span>
-			{domainResult.whois['Registrar Abuse Contact Phone']}
-		</a>
+		{#if domainResult.whois['Registrar Abuse Contact Email']}
+			<a
+				class="registrar-link"
+				href="mailto:{domainResult.whois['Registrar Abuse Contact Email']}"
+			>
+				<span class="material-icons"> mail </span>
+				{domainResult.whois['Registrar Abuse Contact Email']}
+			</a>
+		{/if}
+		{#if domainResult.whois['Registrar Abuse Contact Phone']}
+			<a
+				class="registrar-link"
+				href="tel:{domainResult.whois['Registrar Abuse Contact Phone']}"
+			>
+				<span class="material-icons"> phone </span>
+				{domainResult.whois['Registrar Abuse Contact Phone']}
+			</a>
+		{/if}
 		<h3>Name Servers</h3>
 		<ul class="name-server-list">
 			{#each domainResult.whois['Name Server'] as nameServer}
@@ -56,7 +60,7 @@
 						{#if ip.whois.Updated}
 							<p>Updated: {ip.whois.Updated}</p>
 						{/if}
-						{#if ip.whois.contactAbuse}
+						{#if ip.whois.contactAbuse?.OrgAbuseEmail}
 							<p>Abuse Contact: {ip.whois.contactAbuse.OrgAbuseEmail}</p>
 						{/if}
 					{/if}
