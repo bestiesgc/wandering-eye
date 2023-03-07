@@ -40,7 +40,9 @@ body {
 }
 
 hr {
-	color: currentColor;
+	color: inherit;
+	border: none;
+	border-bottom: 1px solid currentColor;
 }
 
 p {
@@ -279,5 +281,11 @@ input::placeholder {
 	}
 	.ip-container.has-geo {
 		grid-row: span 3;
+	}
+}
+
+@media (min-width: 1050px) {
+	.result-item {
+		width: 40%;
 	}
 }
