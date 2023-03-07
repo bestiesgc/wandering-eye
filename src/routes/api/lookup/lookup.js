@@ -2,6 +2,8 @@ import dns from 'node:dns/promises'
 import psl from 'psl'
 import whois from 'whoiser'
 import geoip from 'geoip-lite'
+import axios from 'axios'
+import * as cheerio from 'cheerio'
 
 async function domainToResult(host) {
 	let newDomain = {
@@ -72,9 +74,17 @@ export default async function lookup(host, ip) {
 	for (let domainI in data.domainResults) {
 		for (let ipI in data.domainResults[domainI].ipAddresses) {
 			let ip = data.domainResults[domainI].ipAddresses[ipI]
+			let abIpDb = await aipdb(ip)
+			let urlHausIpReport = await urlhaus(ip)
 			let ipInfo = {
 				value: ip,
-				whois: (await whois.ip(ip)) || null
+				whois: (await whois.ip(ip)) || null,
+				type: abIpDb.data?.usageType,
+				hostname: abIpDb.data?.hostnames,
+				abuse: {
+					abuseipdb: abIpDb.reportCount,
+					urlhaus: urlHausIpReport
+				}
 			}
 			let geolocation = await geoip.lookup(ip)
 			if (
@@ -129,4 +139,62 @@ function isApex(host) {
 	let parsed = psl.parse(host)
 	if (parsed.subdomain == null) return true
 	else return false
+}
+
+async function aipdb(ip) {
+	try {
+		let resp = await axios({
+			url: `https://www.abuseipdb.com/check/${encodeURIComponent(ip)}`, 
+			headers: {
+				"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/110.0"
+			}
+		});
+		let $ = cheerio.load(resp.data);
+
+		let titles = [];
+		let data = {};
+
+		for (let i in $("#report-wrapper table > tbody > tr > th")) {
+			if ($("#report-wrapper table > tbody > tr > th")?.[i]?.children?.[0]?.data) {
+				let title = $("#report-wrapper table > tbody > tr > th")?.[i]?.children?.[0]?.data.toLowerCase().replace(`(s)`, `s`);
+				if (title.includes(` `)) {
+					title = title.split(` `);
+					for (let a in title) {
+						if (a > 0) title[a] = title[a].substring(0, 1).toUpperCase() + title[a].substring(1);
+					}
+					title = title.join(``);
+				}
+				titles.push(title);
+			}
+		}
+
+		for (let i in titles) {
+			let title = titles[i];
+			if ($("#report-wrapper table > tbody > tr > td")?.[i]?.children?.[0]?.data) {
+				let content = $("#report-wrapper table > tbody > tr > td")?.[i]?.children?.[0]?.data
+				data[title] = content.split(`\n`).join(``);
+			}
+		}
+
+		let reportCount;
+		if ($("#report-wrapper > p")?.text()?.includes("a total of")) reportCount = parseInt($("#report-wrapper > p").text().split(` a total of `)[1].split(` `)[0].replace(`,`, ``));
+		else reportCount = 0;
+
+		return { reportCount, data }
+	} catch(err) {
+		return { reportCount: 0, data: null }
+	}
+}
+
+async function urlhaus(ip) {
+	try {
+		let resp = await axios({method: `POST`, url: `https://urlhaus-api.abuse.ch/v1/host/`, data: `host=${encodeURIComponent(ip)}`});
+		let count = 0;
+		for (let i in resp.data?.urls) {
+			if (resp?.data?.urls[i]?.url_status == "online") count = count + 1
+		}
+		return count;
+	} catch(err) {
+		return 0;
+	}
 }
