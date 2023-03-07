@@ -38,43 +38,44 @@ export default async function lookup(host, ip) {
 		data['domainResults'] = []
 	}
 
-	if (ip == false) {
-		// if input isnt an ip lookup
-		// dns check
-		let newDomain = await domainToResult(host)
-		newDomain.reason = { code: 'query' }
-
-		// maybe include mx lookup too?
-		// whois check
-
-		data.domainResults.push(newDomain)
-
-		if (isApex(host)) {
-			// includes www.
-			let nh = `www.${host}`
-			let wwwDomain = await domainToResult(nh)
-			wwwDomain.reason = {
-				code: 'apex-check-www',
-				from: host
-			}
-
-			data.domainResults.push(wwwDomain)
-		}
-
-		for (let domainI in data.domainResults) {
-			for (let ipI in data.domainResults[domainI].ipAddresses) {
-				let ip = data.domainResults[domainI].ipAddresses[ipI]
-				data.domainResults[domainI].ipAddresses[ipI] = {
-					value: ip,
-					geo: (await geoip.lookup(ip)) || null,
-					whois: (await whois.ip(ip)) || null
-				}
-			}
-		}
-	} else {
+	if (ip) {
 		// if input is an ip lookup
 		data.result.geo = (await geoip.lookup(host)) || null
 		data.result.whois = (await whois.ip(host)) || null
+		return data
+	}
+	
+	// if input isnt an ip lookup
+	// dns check
+	let newDomain = await domainToResult(host)
+	newDomain.reason = { code: 'query' }
+
+	// maybe include mx lookup too?
+	// whois check
+
+	data.domainResults.push(newDomain)
+
+	if (isApex(host)) {
+		// includes www.
+		let nh = `www.${host}`
+		let wwwDomain = await domainToResult(nh)
+		wwwDomain.reason = {
+			code: 'apex-check-www',
+			from: host
+		}
+
+		data.domainResults.push(wwwDomain)
+	}
+
+	for (let domainI in data.domainResults) {
+		for (let ipI in data.domainResults[domainI].ipAddresses) {
+			let ip = data.domainResults[domainI].ipAddresses[ipI]
+			data.domainResults[domainI].ipAddresses[ipI] = {
+				value: ip,
+				geo: (await geoip.lookup(ip)) || null,
+				whois: (await whois.ip(ip)) || null
+			}
+		}
 	}
 
 	return data
