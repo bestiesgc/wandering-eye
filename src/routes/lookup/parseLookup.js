@@ -24,9 +24,6 @@ function parseLookup(resp, domain) {
 
 export default async function lookup(domain) {
     let apiUrl = '/api'
-    if (import.meta.env.DEV) {
-        apiUrl = 'http://127.0.0.1:8998/api'
-    }
     let apiReq = await fetch(`${apiUrl}/lookup?domain=${encodeURIComponent(domain)}`)
     const json = await apiReq.json()
     if (json.success) {
