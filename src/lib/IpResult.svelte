@@ -12,23 +12,46 @@
 		{#if ip.whois?.Organization}
 			<hr />
 			{#if ip.type}
-				<p><b>Type</b>: {ip.type}</p>
+				<div class="labelled-text-wrapper">
+					<span class="text-label">Type</span>
+					<span class="labelled-text">{ip.type}</span>
+				</div>
 			{/if}
 			{#if ip.hostname}
-				<p><b>Hostname(s)</b>: {ip.hostname}</p>
+				<div class="labelled-text-wrapper">
+					<span class="text-label">Hostname(s)</span>
+					<span class="labelled-text">{ip.hostname}</span>
+				</div>
 			{/if}
-			<p><b>Organization</b>: {ip.whois.Organization}</p>
+			<div class="labelled-text-wrapper">
+				<span class="text-label">Organization</span>
+				<span class="labelled-text">{ip.whois.Organization}</span>
+			</div>
 			{#if ip.whois.Updated}
-				<p><b>Updated</b>: {ip.whois.Updated}</p>
+				<div class="labelled-text-wrapper">
+					<span class="text-label">Updated</span>
+					<span class="labelled-text">{ip.whois.Updated}</span>
+				</div>
 			{/if}
 			{#if ip.whois.contactAbuse?.OrgAbuseEmail}
-				<p><b>Abuse Contact</b>: {ip.whois.contactAbuse.OrgAbuseEmail}</p>
+				<div class="labelled-text-wrapper">
+					<span class="text-label">Abuse Contact</span>
+					<span class="labelled-text"
+						>{ip.whois.contactAbuse.OrgAbuseEmail}</span
+					>
+				</div>
 			{/if}
 			{#if ip.abuse.abuseipdb}
-				<p><b>AbuseIPDB Reports</b>: {ip.abuse.abuseipdb}</p>
+				<div class="labelled-text-wrapper">
+					<span class="text-label">AbuseIPDB Reports</span>
+					<span class="labelled-text">{ip.abuse.abuseipdb}</span>
+				</div>
 			{/if}
-			{#if ip.abuse.abuseipdb}
-				<p><b>URLHaus Reports</b>: {ip.abuse.urlhaus}</p>
+			{#if ip.abuse.urlhaus}
+				<div class="labelled-text-wrapper">
+					<span class="text-label">URLHaus Reports</span>
+					<span class="labelled-text">{ip.abuse.urlhaus}</span>
+				</div>
 			{/if}
 		{/if}
 	</div>
