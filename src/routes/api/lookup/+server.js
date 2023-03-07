@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit'
 import net from 'node:net'
-import lookup from './lookup.js'
+import lookup from '$lib/server/lookup.js'
 
 export async function GET({ url }) {
 	const queryDomain = url.searchParams.get('domain')
