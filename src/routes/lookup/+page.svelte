@@ -5,14 +5,13 @@
 	import DomainSearch from '$lib/DomainSearch.svelte'
 	import DomainResult from '$lib/DomainResult.svelte'
 	let data
-	let domain
+	let domain = $page.url.searchParams.get('domain')
 	$: {
-		domain = $page.url.searchParams.get('domain')
-		loadDomain()
+		loadDomain(domain)
 	}
 	let ready = false
 	let success = false
-	async function loadDomain() {
+	async function loadDomain(domain) {
 		ready = false
 		if (browser) {
 			let apiReq = await fetch(
@@ -27,9 +26,7 @@
 </script>
 
 <svelte:head>
-	{#if domain}<title>{domain} | wandering-eye</title>
-	{:else}<title>wandering-eye</title>
-	{/if}
+	<title>"{domain}" Lookup Results | wandering-eye</title>
 </svelte:head>
 
 <CenterPage class="results-page">
