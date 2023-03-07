@@ -15,6 +15,7 @@ export async function GET({ url }) {
 	try {
 		return json(await lookup(queryDomain, isIp))
 	} catch (err) {
+		console.log(err)
 		throw error(500, err.message || err.code)
 	}
 }

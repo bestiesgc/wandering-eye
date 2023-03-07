@@ -1,7 +1,6 @@
 <script>
     import { browser } from '$app/environment';
     import { page } from '$app/stores'
-    import lookup from './parseLookup.js'
     import DomainSearch from '$lib/DomainSearch.svelte'
     import DomainResult from '$lib/DomainResult.svelte'
     let data
@@ -11,11 +10,14 @@
         loadDomain()
     }
     let ready = false
+    let success = false
     async function loadDomain() {
         ready = false
         if (browser) {
-            data = await lookup(domain)
-            console.log('data', data)
+            let apiReq = await fetch(`/api/lookup?domain=${encodeURIComponent(domain)}`)
+            const json = await apiReq.json()
+            if (apiReq.ok) success = true
+            data = json
             ready = true
         }
     }
@@ -31,8 +33,8 @@
         <DomainSearch value={domain}></DomainSearch>
     {/key}
     {#if ready}
-        {#if data.success===true}
-            {#each data.domains as domainResult}
+        {#if success===true}
+            {#each data.domainResults as domainResult}
                 <DomainResult {domainResult}></DomainResult>
             {/each}
         {:else}

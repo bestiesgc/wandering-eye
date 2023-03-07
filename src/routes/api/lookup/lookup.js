@@ -3,6 +3,30 @@ import psl from 'psl'
 import whois from 'whoiser'
 import geoip from 'geoip-lite'
 
+async function domainToResult(host) {
+	let newDomain = {
+		domain: host
+	}
+
+	let dns = await dnsLookup(host)
+	newDomain.cname = dns.cname
+
+	newDomain.ipAddresses = []
+
+	if (dns.v4addr) newDomain.ipAddresses.push(...dns.v4addr)
+	if (dns.v6addr) newDomain.ipAddresses.push(...dns.v6addr)
+
+	// maybe include mx lookup too?
+	// whois check
+	if (isApex(host)) {
+		let wi = await whois.domain(host, { follow: 1 })
+		wi = Object.values(wi)[0]
+		newDomain.whois = wi
+	}
+
+	return newDomain
+}
+
 export default async function lookup(host, ip) {
 	let data = {}
 
@@ -11,70 +35,41 @@ export default async function lookup(host, ip) {
 		data['result'] = {}
 	} else {
 		data['type'] = 'domain'
-		data['domainResults'] = {}
-		data['ipResults'] = {}
+		data['domainResults'] = []
 	}
 
 	if (ip == false) {
 		// if input isnt an ip lookup
 		// dns check
-		data.domainResults[host] = {}
-
-		let dns = await dnsLookup(host)
-		data.domainResults[host].cname = dns.cname
-
-		data.domainResults[host].ipAddresses = []
-
-		if (dns.v4addr) data.domainResults[host].ipAddresses.push(dns.v4addr)
-		if (dns.v6addr) data.domainResults[host].ipAddresses.push(dns.v6addr)
-
-		// add ip to ipResults
-		for (let i in data.domainResults[host].ipAddresses) {
-			let ip = data.domainResults[host].ipAddresses[i][0]
-			data.ipResults[ip] = { value: ip }
-		}
-
-		data.domainResults[host].reason = { code: 'query' }
-
-		if (isApex(host)) {
-			// includes www.
-			let nh = `www.${host}`
-			dns = await dnsLookup(nh)
-			data.domainResults[nh] = {}
-			data.domainResults[nh].cname = dns.cname
-
-			if (!dns.v4addr && !dns.v6addr) delete data.domainResults[nh].cname
-			else {
-				data.domainResults[nh].ipAddresses = []
-				if (dns.v4addr)
-					data.domainResults[nh].ipAddresses.push(dns.v4addr)
-				if (dns.v6addr)
-					data.domainResults[nh].ipAddresses.push(dns.v6addr)
-
-				for (let i in data.domainResults[nh].ipAddresses) {
-					let ip = data.domainResults[nh].ipAddresses[i][0]
-					data.ipResults[ip] = { value: ip }
-				}
-
-				data.domainResults[nh].reason = {
-					code: 'apex-check-www',
-					from: host
-				}
-			}
-		}
+		let newDomain = await domainToResult(host)
+		newDomain.reason = { code: 'query' }
 
 		// maybe include mx lookup too?
 		// whois check
 
-		let wi = await whois.domain(host, { follow: 1 })
-		wi = Object.values(wi)[0]
-		data.domainResults[host].whois = wi
+		data.domainResults.push(newDomain)
 
-		// add geoip & ip whois values
-		let ipArray = Object.values(data.ipResults)
-		for (let i in ipArray) {
-			ipArray[i].geo = (await geoip.lookup(ipArray[i].value)) || null
-			ipArray[i].whois = (await whois.ip(ipArray[i].value)) || null
+		if (isApex(host)) {
+			// includes www.
+			let nh = `www.${host}`
+			let wwwDomain = await domainToResult(nh)
+			wwwDomain.reason = {
+				code: 'apex-check-www',
+				from: host
+			}
+
+			data.domainResults.push(wwwDomain)
+		}
+
+		for (let domainI in data.domainResults) {
+			for (let ipI in data.domainResults[domainI].ipAddresses) {
+				let ip = data.domainResults[domainI].ipAddresses[ipI]
+				data.domainResults[domainI].ipAddresses[ipI] = {
+					value: ip,
+					geo: (await geoip.lookup(ip)) || null,
+					whois: (await whois.ip(ip)) || null
+				}
+			}
 		}
 	} else {
 		// if input is an ip lookup
