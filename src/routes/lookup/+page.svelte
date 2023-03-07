@@ -34,7 +34,7 @@
 		<h1>wandering-eye</h1>
 	</a>
 	{#key domain}
-		<DomainSearch value={domain} />
+		<DomainSearch bind:value={domain} />
 	{/key}
 	{#if ready}
 		{#if success === true}
