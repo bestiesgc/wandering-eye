@@ -20,10 +20,7 @@ const config = {
 			requireSuffix: false
 		}),
 		sveltekit()
-	],
-	preview: {
-		port: 8998
-	}
+	]
 }
 
 export default config
