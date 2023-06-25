@@ -2,6 +2,11 @@ import { json, error } from '@sveltejs/kit'
 import net from 'node:net'
 import geoip from 'geoip-lite'
 import whois from 'whoiser'
+import NodeCache from 'node-cache'
+
+const whoisCache = new NodeCache({
+	stdTTL: 60 * 60
+})
 
 function isIp(query) {
 	let isIp = net.isIP(query)
@@ -13,6 +18,9 @@ export async function GET({ url }) {
 	const query = url.searchParams.get('q')
 	if (!query) {
 		throw error(400, 'noQuery')
+	}
+	if (whoisCache.has(query)) {
+		return json(whoisCache.get(query))
 	}
 	let whoisData
 	try {
@@ -31,12 +39,16 @@ export async function GET({ url }) {
 		}
 	}
 
-	return json({
+	const value = {
 		query,
 		whois: ip
 			? whoisData
 			: Object.values(whoisData)[Object.keys(whoisData).length - 1],
 		geo,
 		isIp: ip
-	})
+	}
+
+	whoisCache.set(query, value)
+
+	return json(value)
 }

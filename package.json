@@ -30,6 +30,7 @@
 	"type": "module",
 	"dependencies": {
 		"geoip-lite": "^1.4.7",
+		"node-cache": "^5.1.2",
 		"whoiser": "^1.17.1"
 	}
 }
