@@ -108,7 +108,7 @@
 	}
 	@media screen and (min-width: 600px) {
 		.owner-map:has(.map) {
-			grid-template-columns: 20rem 1fr;
+			grid-template-columns: 1fr 1fr;
 		}
 		.owner-map .map {
 			grid-column: 2;
