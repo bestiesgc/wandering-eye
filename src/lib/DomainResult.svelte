@@ -47,7 +47,7 @@
 		</AccordionItem>
 	{/if}
 	{#if whois['Registrant Country'] || (whois['Registrant Organization'] ?? whois['Registrant Name'])}
-		<AccordionItem id="owner" name="Owner" noPadding>
+		<AccordionItem id="owner" name="Owner" open noPadding>
 			<div class="owner-map">
 				<div class="details">
 					{#if whois['Registrant Organization'] ?? whois['Registrant Name']}
