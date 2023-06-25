@@ -14,14 +14,8 @@
 	{#if title}
 		<title>{title} - wandering-eye docs</title>
 		<meta name="title" content="{title} - wandering-eye docs" />
-		<meta
-			property="og:title"
-			content="Meta Tags — Preview, Edit and Generate"
-		/>
-		<meta
-			property="twitter:title"
-			content="Meta Tags — Preview, Edit and Generate"
-		/>
+		<meta property="og:title" content="{title} - wandering-eye docs" />
+		<meta property="twitter:title" content="{title} - wandering-eye docs" />
 	{:else}
 		<title>wandering-eye docs</title>
 		<meta name="title" content="wandering-eye docs" />
