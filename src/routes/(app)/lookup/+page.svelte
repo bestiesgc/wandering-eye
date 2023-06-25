@@ -1,17 +1,19 @@
 <script>
+	import { browser } from '$app/environment'
 	import DomainResult from '$lib/DomainResult.svelte'
 	import Accordion from '$lib/Accordion.svelte'
 	import AccordionItem from '$lib/AccordionItem.svelte'
 	import IpResult from '$lib/IpResult.svelte'
-	import { onMount } from 'svelte'
 	export let data
 
 	let nameservers = null
 
-	onMount(async () => {
-		if (data.whois['Name Server']?.length > 0) {
+	async function updateNameservers(list) {
+		if (!browser) return
+		nameservers = null
+		if (list?.length > 0) {
 			nameservers = []
-			for (let nameserver of data.whois['Name Server']) {
+			for (let nameserver of list) {
 				const resp = await fetch(
 					`https://dns.google/resolve?${new URLSearchParams({
 						name: nameserver,
@@ -35,7 +37,11 @@
 			}
 			nameservers = nameservers
 		}
-	})
+	}
+
+	$: {
+		updateNameservers(data.whois['Name Server'])
+	}
 </script>
 
 <div class="results" class:results-has-nameservers={nameservers}>
@@ -61,12 +67,12 @@
 			<p class="list-title">nameservers</p>
 			{#if nameservers.length > 0}
 				<Accordion>
-					{#each nameservers as nameserver}
-						<AccordionItem name={nameserver.fromDomain} open>
+					{#each nameservers as nameserver, i}
+						<AccordionItem name={nameserver.fromDomain} open={i == 0}>
 							<IpResult
 								geo={nameserver.lookup.geo}
 								whois={nameserver.lookup.whois}
-								close={true}
+								close={i != 0}
 							/>
 						</AccordionItem>
 					{/each}
