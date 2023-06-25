@@ -1,5 +1,5 @@
 <script>
-	import { slide } from 'svelte/transition'
+	import { fly } from 'svelte/transition'
 	import { createEventDispatcher } from 'svelte'
 	const dispatch = createEventDispatcher()
 	export let onSubmit = null
@@ -55,7 +55,7 @@
 	</form>
 
 	{#if invalid && !disabled}
-		<div class="warning-message" transition:slide>
+		<div class="warning-message" transition:fly={{ y: -10 }}>
 			{invalidMessage}
 		</div>
 	{/if}
@@ -167,10 +167,9 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		padding: 0.5rem;
-		border: 1px solid var(--red-100);
+		padding: 0.25rem 0.5rem;
 		background-color: var(--red-400);
-		border-radius: 0.4rem;
+		border-radius: 5rem;
 		margin: 0.4rem 0;
 	}
 </style>
