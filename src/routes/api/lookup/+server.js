@@ -1,7 +1,7 @@
 import { json, error } from '@sveltejs/kit'
 import net from 'node:net'
 import geoip from 'geoip-lite'
-import whois from 'whois-json'
+import whois from 'whoiser'
 
 function isIp(query) {
 	let isIp = net.isIP(query)
@@ -18,7 +18,9 @@ export async function GET({ url }) {
 	const ip = isIp(query)
 	let geo = null
 	if (ip) {
-		const geoLookup = await geoip.lookup(query)
+		const geoLookup = geoip.lookup(query)
+		console.log('geo', geoLookup)
+		// Don't want to use geo location if it's just the center of America
 		if (geoLookup && geoLookup.ll[0] != 37.751 && geoLookup.ll[1] != -97.822) {
 			geo = geoLookup
 		}
@@ -26,7 +28,9 @@ export async function GET({ url }) {
 
 	return json({
 		query,
-		whois: whoisData,
+		whois: ip
+			? whoisData
+			: Object.values(whoisData)[Object.keys(whoisData).length - 1],
 		geo,
 		isIp: ip
 	})

@@ -10,75 +10,67 @@
 
 <Accordion>
 	<AccordionItem id="info" name="Info" open>
-		{#if whois.creationDate ?? whois.created}
+		{#if whois['Created Date']}
 			<p class="creation-date">
-				Registered <Timestamp
-					time={new Date(whois.creationDate ?? whois.created)}
-				/>
+				Registered <Timestamp time={new Date(whois['Created Date'])} />
 			</p>
 		{/if}
-		{#if whois.registrarRegistrationExpirationDate ?? whois.expiryDate}
+		{#if whois['Expiry Date']}
 			<p class="expiration-date">
-				Expires <Timestamp
-					time={new Date(
-						whois.registrarRegistrationExpirationDate ?? whois.expiryDate
-					)}
-				/>
+				Expires <Timestamp time={new Date(whois['Expiry Date'])} />
 			</p>
 		{/if}
 	</AccordionItem>
 	{#if whois.registrar}
 		<AccordionItem id="registrar" name="Registrar" open>
 			<div class="contents">
-				{#if whois.registrar}
-					<p class="registrar-name">{whois.registrar}</p>
+				{#if whois.Registrar}
+					<p class="registrar-name">{whois.Registrar}</p>
 				{/if}
-				{#if whois.registrarAbuseContactEmail}
+				{#if whois['Registrar Abuse Contact Email']}
 					<LinkWithIcon
 						icon="mail"
-						href="mailto:{whois.registrarAbuseContactEmail}"
+						href="mailto:{whois['Registrar Abuse Contact Email']}"
 					>
-						{whois.registrarAbuseContactEmail}
+						{whois['Registrar Abuse Contact Email']}
 					</LinkWithIcon>
 				{/if}
-				{#if whois.registrarAbuseContactPhone}
+				{#if whois['Registrar Abuse Contact Phone']}
 					<LinkWithIcon
 						icon="phone"
-						href="tel:{whois.registrarAbuseContactPhone}"
+						href="tel:{whois['Registrar Abuse Contact Phone']}"
 					>
-						{whois.registrarAbuseContactPhone}
+						{whois['Registrar Abuse Contact Phone']}
 					</LinkWithIcon>
 				{/if}
 			</div>
 		</AccordionItem>
 	{/if}
-	{#if whois.registrantCountry || (whois.registrantOrganization ?? whois.registrantName ?? whois.organisation)}
+	{#if whois['Registrant Country'] || (whois['Registrant Organization'] ?? whois['Registrant Name'])}
 		<AccordionItem id="owner" name="Owner" noPadding>
 			<div class="owner-map">
 				<div class="details">
-					{#if whois.registrantOrganization ?? whois.registrantName ?? whois.organisation}
+					{#if whois['Registrant Organization'] ?? whois['Registrant Name']}
 						<p class="registrant">
-							{whois.registrantOrganization ??
-								whois.registrantName ??
-								whois.organisation}
+							{whois['Registrant Organization'] ?? whois['Registrant Name']}
 						</p>
 					{/if}
-					{#if whois.registrantCountry}
+					{#if whois['Registrant Country']}
 						<p class="address">
-							{whois.registrantStreet ?? ''}
-							{whois.registrantCity ?? ''}
-							{whois.registrantStateProvince ?? ''}
-							{countrycodes[whois.registrantCountry]}
+							{whois['Registrant Street'] ?? ''}
+							{whois['Registrant City'] ?? ''}
+							{whois['Registrant State/Province'] ?? ''}
+							{countrycodes[whois['Registrant Country']]}
 						</p>
 					{/if}
 				</div>
-				{#if whois.registrantStreet}
+				{#if whois['Registrant Street']}
 					<div class="map">
 						<OpenStreetMap
-							street={whois.registrantStreet}
-							city={whois.registrantCity}
-							state={whois.registrantStateProvince}
-							country={countrycodes[whois.registrantCountry]}
+							street={whois['Registrant Street']}
+							city={whois['Registrant City']}
+							state={whois['Registrant State/Province']}
+							country={countrycodes[whois['Registrant Country']]}
 						/>
 					</div>
 				{/if}
