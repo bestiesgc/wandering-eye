@@ -17,9 +17,10 @@ async function getArticles() {
 		})
 }
 
-const articles = await getArticles()
+const articles = getArticles()
 
 export async function load() {
+	await articles
 	return {
 		articles
 	}

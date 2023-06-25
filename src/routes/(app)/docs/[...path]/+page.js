@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
 
-export function load(event) {
+export function load() {
 	throw error(404, 'Not Found')
 }
