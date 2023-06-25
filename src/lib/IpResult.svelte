@@ -5,9 +5,12 @@
 	import OpenStreetMap from '$lib/OpenStreetMap.svelte'
 	export let whois
 	export let geo = null
+	export let close = false
 
 	const email =
-		whois.contactAbuse?.OrgAbuseEmail ?? whois['Contact Admin']['abuse-mailbox']
+		whois.contactAbuse?.OrgAbuseEmail ??
+		whois.contactAbuse?.RAbuseEmail ??
+		whois['Contact Admin']['abuse-mailbox']
 
 	let address = whois.organisation.address ?? whois.organisation.Address
 
@@ -18,13 +21,13 @@
 </script>
 
 <Accordion>
-	<AccordionItem id="info" name="Info" open>
+	<AccordionItem id="info" name="Info" open={!close}>
 		{#if whois.range}
 			<p class="range">{whois.range}</p>
 		{/if}
 		<p class="block">{whois.route ?? whois.cidr}</p>
 	</AccordionItem>
-	<AccordionItem id="owner" name="Owner" open noPadding>
+	<AccordionItem id="owner" name="Owner" open={!close} noPadding>
 		<div class="owner-map">
 			<div class="details">
 				<p class="org-name">
