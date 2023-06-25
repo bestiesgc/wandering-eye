@@ -4,12 +4,13 @@ A tool for finding information on how to stop malicious websites.
 
 This tool uses GeoIP data from MaxMind that is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Their database is used on our project to identify where a server is located.
 
-Information given includes:
+## Task list
 
-- Whois lookup of domains and IPs
-- GeoIP lookups
-
-_More to come..._
+- [x] Whois lookup of domains and IPs
+- [x] GeoIP lookups
+- [ ] Check if blocklists include a domain
+- [ ] Find information on domains' A records and CNAME records
+- [ ] Find domains using an IP
 
 ## License
 
