@@ -24,7 +24,7 @@
 	<div
 		id="{id}-contents"
 		class="accordion-contents-wrapper"
-		class:closed={!open}
+		class:closed={!open && loaded}
 	>
 		{#if loaded}
 			<div
