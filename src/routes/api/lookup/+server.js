@@ -14,7 +14,12 @@ export async function GET({ url }) {
 	if (!query) {
 		throw error(400, 'noQuery')
 	}
-	const whoisData = await whois(query)
+	let whoisData
+	try {
+		whoisData = await whois(query)
+	} catch (err) {
+		throw error(500, err.message)
+	}
 	const ip = isIp(query)
 	let geo = null
 	if (ip) {
