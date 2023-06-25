@@ -79,7 +79,9 @@
 		grid-template-rows: 0fr;
 	}
 	.closed .accordion-contents {
+		visibility: hidden;
 		padding-block: 0;
+		transition: padding 100ms, visibility 0ms 100ms;
 	}
 	.no-padding {
 		padding: 0;
