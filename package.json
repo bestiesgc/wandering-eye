@@ -29,6 +29,6 @@
 	"type": "module",
 	"dependencies": {
 		"geoip-lite": "^1.4.7",
-		"whois-json": "^2.0.4"
+		"whoiser": "^1.17.1"
 	}
 }
