@@ -21,7 +21,7 @@
 			</p>
 		{/if}
 	</AccordionItem>
-	{#if whois.registrar}
+	{#if whois.Registrar}
 		<AccordionItem id="registrar" name="Registrar" open>
 			<div class="contents">
 				{#if whois.Registrar}
