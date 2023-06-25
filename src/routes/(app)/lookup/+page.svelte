@@ -11,7 +11,6 @@
 
 	async function updateNameservers(list) {
 		if (!browser) return
-		nameservers = null
 		if (list?.length > 0) {
 			nameservers = []
 			for (let nameserver of list) {
@@ -37,6 +36,8 @@
 				return
 			}
 			nameservers = nameservers
+		} else {
+			nameservers = null
 		}
 	}
 
