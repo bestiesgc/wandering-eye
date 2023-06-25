@@ -19,7 +19,6 @@ export async function GET({ url }) {
 	let geo = null
 	if (ip) {
 		const geoLookup = geoip.lookup(query)
-		console.log('geo', geoLookup)
 		// Don't want to use geo location if it's just the center of America
 		if (geoLookup && geoLookup.ll[0] != 37.751 && geoLookup.ll[1] != -97.822) {
 			geo = geoLookup
