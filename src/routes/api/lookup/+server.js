@@ -5,8 +5,10 @@ import geoip from 'geoip-lite'
 import whois from 'whoiser'
 import NodeCache from 'node-cache'
 
+const WHOIS_CACHE_TTL = env.WHOIS_CACHE_TTL ?? 60 * 60 * 24
+
 const whoisCache = new NodeCache({
-	stdTTL: env.WHOIS_CACHE_TTL ?? 60 * 60 * 24
+	stdTTL: WHOIS_CACHE_TTL
 })
 
 function isIp(query) {
@@ -15,12 +17,18 @@ function isIp(query) {
 	return false
 }
 
-export async function GET({ url }) {
+export async function GET({ url, setHeaders }) {
 	const query = url.searchParams.get('q')
 	if (!query) {
 		throw error(400, 'noQuery')
 	}
 	if (whoisCache.has(query)) {
+		setHeaders({
+			'cache-control': `private, max-age=${(
+				(whoisCache.getTtl(query) - Date.now()) /
+				1000
+			).toFixed(0)}`
+		})
 		return json(whoisCache.get(query))
 	}
 	let whoisData
@@ -51,5 +59,6 @@ export async function GET({ url }) {
 
 	whoisCache.set(query, value)
 
+	setHeaders({ 'cache-control': `private, max-age=${WHOIS_CACHE_TTL}` })
 	return json(value)
 }
