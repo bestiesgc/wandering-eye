@@ -2,7 +2,6 @@
 	import DomainResult from '$lib/DomainResult.svelte'
 	import IpResult from '$lib/IpResult.svelte'
 	export let data
-	console.log(data)
 </script>
 
 <div class="result">
