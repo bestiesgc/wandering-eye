@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private'
 import { json, error } from '@sveltejs/kit'
 import net from 'node:net'
 import geoip from 'geoip-lite'
@@ -5,7 +6,7 @@ import whois from 'whoiser'
 import NodeCache from 'node-cache'
 
 const whoisCache = new NodeCache({
-	stdTTL: 60 * 60
+	stdTTL: env.WHOIS_CACHE_TTL ?? 60 * 60 * 24
 })
 
 function isIp(query) {
