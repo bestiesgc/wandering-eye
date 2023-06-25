@@ -46,24 +46,20 @@
 
 <div class="results" class:results-has-nameservers={nameservers}>
 	<div class="main-result">
-		{#if data.isIp}
-			<div class="item">
+		<div class="item">
+			{#if data.isIp}
 				<IpResult geo={data.geo} whois={data.whois} />
-			</div>
-		{:else if data.whois['Domain Name']}
-			<div class="item">
+			{:else if data.whois['Domain Name']}
 				<p class="list-title">{data.whois['Domain Name']}</p>
 				<DomainResult whois={data.whois} />
-			</div>
-		{:else}
-			<div class="item">
+			{:else}
 				<p class="list-title">Couldn't find this domain.</p>
 				<p>
 					It may be available. If you're sure this is an active domain, try
 					again in a moment.
 				</p>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 	{#if nameservers}
 		<div class="nameservers">
