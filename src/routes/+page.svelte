@@ -13,7 +13,8 @@
 	<DomainSearch />
 	<p class="smalltext">
 		service by <a href="https://besties.house">besties</a> -
-		<a href="https://git.gay/besties/wandering-eye">source</a>
+		<a href="https://git.gay/besties/wandering-eye">source</a> -
+		<a href="/docs/attributions">attributions</a>
 	</p>
 </CenterPage>
 

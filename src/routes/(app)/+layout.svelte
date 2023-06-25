@@ -14,8 +14,13 @@
 		<slot />
 	</div>
 	<footer>
-		service by <a href="https://besties.house">besties</a> -
-		<a href="https://git.gay/besties/wandering-eye">source</a>
+		<span class="left">
+			made with ❤️ by <a href="https://besties.house">besties</a>
+		</span>
+		<span class="right">
+			<a href="https://git.gay/besties/wandering-eye">source code</a> -
+			<a href="/docs/attributions">attributions</a>
+		</span>
 	</footer>
 </div>
 
@@ -33,6 +38,8 @@
 		padding: 0.5rem;
 	}
 	footer {
+		display: flex;
+		justify-content: space-between;
 		padding: 0.5rem;
 		font-size: 0.8rem;
 		color: var(--grey-300);
