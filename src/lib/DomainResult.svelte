@@ -9,7 +9,7 @@
 </script>
 
 <Accordion>
-	<AccordionItem id="info" name="Info" open>
+	<AccordionItem id="info" name="info" open>
 		{#if whois['Created Date']}
 			<p class="creation-date">
 				Registered <Timestamp time={new Date(whois['Created Date'])} />
@@ -22,7 +22,7 @@
 		{/if}
 	</AccordionItem>
 	{#if whois.Registrar}
-		<AccordionItem id="registrar" name="Registrar" open>
+		<AccordionItem id="registrar" name="registrar" open>
 			<div class="contents">
 				{#if whois.Registrar}
 					<p class="registrar-name">{whois.Registrar}</p>
@@ -47,7 +47,7 @@
 		</AccordionItem>
 	{/if}
 	{#if whois['Registrant Country'] || (whois['Registrant Organization'] ?? whois['Registrant Name'])}
-		<AccordionItem id="owner" name="Owner" open noPadding>
+		<AccordionItem id="owner" name="owner" open noPadding>
 			<div class="owner-map">
 				<div class="details">
 					{#if whois['Registrant Organization'] ?? whois['Registrant Name']}

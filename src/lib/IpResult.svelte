@@ -21,13 +21,13 @@
 </script>
 
 <Accordion>
-	<AccordionItem id="info" name="Info" open={!close}>
+	<AccordionItem id="info" name="info" open={!close}>
 		{#if whois.range}
 			<p class="range">{whois.range}</p>
 		{/if}
 		<p class="block">{whois.route ?? whois.cidr}</p>
 	</AccordionItem>
-	<AccordionItem id="owner" name="Owner" open={!close} noPadding>
+	<AccordionItem id="owner" name="owner" open={!close} noPadding>
 		<div class="owner-map">
 			<div class="details">
 				<p class="org-name">
@@ -45,7 +45,7 @@
 		</div>
 	</AccordionItem>
 	{#if geo}
-		<AccordionItem id="geo" name="Geo location" noPadding>
+		<AccordionItem id="geo" name="geolocation" noPadding>
 			<div class="map">
 				<OpenStreetMap ll={geo.ll} />
 			</div>
