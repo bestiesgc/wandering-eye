@@ -70,15 +70,9 @@
 		<div class="item">
 			{#if data.isIp}
 				<IpResult geo={data.geo} whois={data.whois} />
-			{:else if data.whois['Domain Name']}
+			{:else}
 				<p class="list-title">{data.whois['Domain Name']}</p>
 				<DomainResult whois={data.whois} />
-			{:else}
-				<p class="list-title">Couldn't find this domain.</p>
-				<p>
-					It may be available. If you're sure this is an active domain, try
-					again in a moment.
-				</p>
 			{/if}
 		</div>
 	</div>

@@ -8,7 +8,7 @@
 
 <div class="error">
 	<p class="error-title">{$page.status}: {$page.error.message}</p>
-	{#if page.status == 404}
+	{#if $page.status == 404}
 		<p>
 			The domain may be available. If you're sure this is an active domain, try
 			again in a moment.
