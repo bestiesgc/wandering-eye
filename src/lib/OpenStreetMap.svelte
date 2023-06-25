@@ -8,14 +8,13 @@
 	async function getItem(query) {
 		if (!query.q) delete query.q
 		const hasItem = localStorage.getItem(JSON.stringify(query))
-		if (hasItem) {
+		if (hasItem && hasItem != 'undefined') {
 			return JSON.parse(hasItem)
 		}
 		const resp = await fetch(
 			`https://nominatim.openstreetmap.org/search?${new URLSearchParams(query)}`
 		)
 		const item = (await resp.json())[0]
-		if (!item) return
 		localStorage.setItem(JSON.stringify(query), JSON.stringify(item))
 		return item
 	}
@@ -34,9 +33,9 @@
 
 {#if promise}
 	{#await promise}
-		<div class="map-wrapper loading" />
+		<div class="map-wrapper" />
 	{:then item}
-		<div class="map-wrapper">
+		<div class="map-wrapper loaded">
 			<iframe
 				title={item.display_name ? item.display_name : 'OpenStreetMap'}
 				frameborder="0"
@@ -50,7 +49,7 @@
 		</div>
 	{/await}
 {:else if ll}
-	<div class="map-wrapper">
+	<div class="map-wrapper loaded">
 		<iframe
 			title="OpenStreetMap"
 			frameborder="0"
@@ -63,7 +62,7 @@
 {/if}
 
 <style>
-	.map-wrapper {
+	.map-wrapper.loaded {
 		background-color: var(--grey-300);
 		position: relative;
 		min-height: 10rem;
