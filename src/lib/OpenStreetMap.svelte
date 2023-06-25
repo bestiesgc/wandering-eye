@@ -6,6 +6,7 @@
 	export let street = null
 	export let ll = null
 	async function getItem(query) {
+		if (!query.q) delete query.q
 		const hasItem = localStorage.getItem(JSON.stringify(query))
 		if (hasItem) {
 			return JSON.parse(hasItem)
@@ -14,7 +15,6 @@
 			`https://nominatim.openstreetmap.org/search?${new URLSearchParams(query)}`
 		)
 		const item = (await resp.json())[0]
-		console.log(item)
 		if (!item) return
 		localStorage.setItem(JSON.stringify(query), JSON.stringify(item))
 		return item
