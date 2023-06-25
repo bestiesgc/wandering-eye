@@ -17,6 +17,7 @@ export async function GET({ url }) {
 	let whoisData
 	try {
 		whoisData = await whois(query)
+		if (whoisData.error) throw new Error(whoisData.error)
 	} catch (err) {
 		throw error(500, err.message)
 	}
