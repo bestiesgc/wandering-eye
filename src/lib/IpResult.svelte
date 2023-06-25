@@ -10,14 +10,18 @@
 	const email =
 		whois.contactAbuse?.OrgAbuseEmail ??
 		whois.contactAbuse?.RAbuseEmail ??
-		whois['Contact Admin']['abuse-mailbox']
+		whois.contactAbuse?.['abuse-mailbox'] ??
+		whois['Contact Admin']?.['abuse-mailbox']
 
-	let address = whois.organisation.address ?? whois.organisation.Address
+	let address =
+		whois.organisation?.address ??
+		whois.organisation?.Address ??
+		whois.contactAbuse?.address
 
-	if (whois.organisation.City) address += ` ${whois.organisation.City}`
-	if (whois.organisation.StateProv)
+	if (whois.organisation?.City) address += ` ${whois.organisation.City}`
+	if (whois.organisation?.StateProv)
 		address += ` ${whois.organisation.StateProv}`
-	if (whois.organisation.Country) address += ` ${whois.organisation.Country}`
+	if (whois.organisation?.Country) address += ` ${whois.organisation.Country}`
 </script>
 
 <Accordion>
@@ -25,23 +29,27 @@
 		{#if whois.range}
 			<p class="range">{whois.range}</p>
 		{/if}
-		<p class="block">{whois.route ?? whois.cidr}</p>
+		{#if whois.route ?? whois.cidr}
+			<p class="block">{whois.route ?? whois.cidr}</p>
+		{/if}
 	</AccordionItem>
 	<AccordionItem id="owner" name="owner" open={!close} noPadding>
 		<div class="owner-map">
 			<div class="details">
-				<p class="org-name">
-					{whois.organisation['org-name'] ?? whois.organisation.OrgName}
-				</p>
-				{#if whois.asn != ''}
+				{#if whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
+					<p class="org-name">
+						{whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
+					</p>
+				{/if}
+				{#if whois.asn}
 					<p class="org-asn">{whois.asn}</p>
 				{/if}
-				<p class="address">{address}</p>
+				{#if address}
+					<p class="address">{address}</p>
+				{/if}
 				<LinkWithIcon icon="mail" href="mailto:{email}">{email}</LinkWithIcon>
 			</div>
-			<div class="map">
-				<OpenStreetMap query={address} />
-			</div>
+			<OpenStreetMap query={address} />
 		</div>
 	</AccordionItem>
 	{#if geo}
@@ -68,24 +76,19 @@
 	}
 	.owner-map .details {
 		align-self: center;
-		/* gap: 0.5rem; */
 		margin: 1rem 0.5rem;
 	}
-	.map {
-		height: 100%;
-		min-height: 15rem;
-	}
-	.map :global(.map-wrapper) {
-		height: 100%;
-	}
-	.owner-map .map {
+	.owner-map :global(.map-wrapper) {
 		grid-row: 1;
 	}
+	.owner-map :global(.map-wrapper.loaded) {
+		min-height: 15rem;
+	}
 	@media screen and (min-width: 600px) {
-		.owner-map:has(.map) {
+		.owner-map:has(.map-wrapper) {
 			grid-template-columns: 1fr 1fr;
 		}
-		.owner-map .map {
+		.owner-map :global(.map-wrapper) {
 			grid-column: 2;
 		}
 	}

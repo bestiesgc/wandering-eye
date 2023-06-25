@@ -65,14 +65,12 @@
 					{/if}
 				</div>
 				{#if whois['Registrant Street']}
-					<div class="map">
-						<OpenStreetMap
-							street={whois['Registrant Street']}
-							city={whois['Registrant City']}
-							state={whois['Registrant State/Province']}
-							country={countrycodes[whois['Registrant Country']]}
-						/>
-					</div>
+					<OpenStreetMap
+						street={whois['Registrant Street']}
+						city={whois['Registrant City']}
+						state={whois['Registrant State/Province']}
+						country={countrycodes[whois['Registrant Country']]}
+					/>
 				{/if}
 			</div>
 		</AccordionItem>
@@ -97,20 +95,17 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 	}
-	.owner-map .map {
+	.owner-map :global(.map-wrapper) {
 		grid-row: 1;
 	}
-	.map {
+	.owner-map :global(.map-wrapper.loaded) {
 		min-height: 15rem;
 	}
-	.map :global(.map-wrapper) {
-		height: 100%;
-	}
 	@media screen and (min-width: 600px) {
-		.owner-map:has(.map) {
+		.owner-map:has(.map-wrapper) {
 			grid-template-columns: 1fr 1fr;
 		}
-		.owner-map .map {
+		.owner-map :global(.map-wrapper) {
 			grid-column: 2;
 		}
 	}
