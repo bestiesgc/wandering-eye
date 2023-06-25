@@ -29,4 +29,4 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 The version of the project released before June, 2023 was released into the public domain.
-For the public domain version, see https://git.gay/besties/wandering-eye/commit/d8337b404eb71a8f88e72147e4ff6f188dba3a43
+For the public domain version, see https://git.gay/besties/wandering-eye/src/commit/d8337b404eb71a8f88e72147e4ff6f188dba3a43
