@@ -1,58 +1,95 @@
 <script>
-	import Leaflet from './Leaflet.svelte'
-	export let ip
+	import Accordion from '$lib/Accordion.svelte'
+	import AccordionItem from '$lib/AccordionItem.svelte'
+	import LinkWithIcon from '$lib/LinkWithIcon.svelte'
+	import OpenStreetMap from '$lib/OpenStreetMap.svelte'
+	export let whois
+	export let geo = null
+	export let close = false
+
+	const email =
+		whois.contactAbuse?.OrgAbuseEmail ??
+		whois.contactAbuse?.RAbuseEmail ??
+		whois.contactAbuse?.['abuse-mailbox'] ??
+		whois['Contact Admin']?.['abuse-mailbox']
+
+	let address =
+		whois.organisation?.address ??
+		whois.organisation?.Address ??
+		whois.contactAbuse?.address
+
+	if (whois.organisation?.City) address += ` ${whois.organisation.City}`
+	if (whois.organisation?.StateProv)
+		address += ` ${whois.organisation.StateProv}`
+	if (whois.organisation?.Country) address += ` ${whois.organisation.Country}`
 </script>
 
-<div class="ip-container" class:has-geo={ip.geo}>
-	{#if ip.geo}
-		<Leaflet ll={ip.geo.ll} />
-	{/if}
-	<div class="ip-meta">
-		<h4 class="ip-meta_address">{ip.value}</h4>
-		{#if ip.whois?.Organization}
-			<hr />
-			{#if ip.type}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Type</span>
-					<span class="labelled-text">{ip.type}</span>
-				</div>
-			{/if}
-			{#if ip.hostname}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Hostname(s)</span>
-					<span class="labelled-text">{ip.hostname}</span>
-				</div>
-			{/if}
-			<div class="labelled-text-wrapper">
-				<span class="text-label">Organization</span>
-				<span class="labelled-text">{ip.whois.Organization}</span>
-			</div>
-			{#if ip.whois.Updated}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Updated</span>
-					<span class="labelled-text">{ip.whois.Updated}</span>
-				</div>
-			{/if}
-			{#if ip.whois.contactAbuse?.OrgAbuseEmail}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Abuse Contact</span>
-					<span class="labelled-text"
-						>{ip.whois.contactAbuse.OrgAbuseEmail}</span
-					>
-				</div>
-			{/if}
-			{#if ip.abuse.abuseipdb}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">AbuseIPDB Reports</span>
-					<span class="labelled-text">{ip.abuse.abuseipdb}</span>
-				</div>
-			{/if}
-			{#if ip.abuse.urlhaus}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">URLHaus Reports</span>
-					<span class="labelled-text">{ip.abuse.urlhaus}</span>
-				</div>
-			{/if}
+<Accordion>
+	<AccordionItem id="info" name="info" open={!close}>
+		{#if whois.range}
+			<p class="range">{whois.range}</p>
 		{/if}
-	</div>
-</div>
+		{#if whois.route ?? whois.cidr}
+			<p class="block">{whois.route ?? whois.cidr}</p>
+		{/if}
+	</AccordionItem>
+	<AccordionItem id="owner" name="owner" open={!close} noPadding>
+		<div class="owner-map">
+			<div class="details">
+				{#if whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
+					<p class="org-name">
+						{whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
+					</p>
+				{/if}
+				{#if whois.asn}
+					<p class="org-asn">{whois.asn}</p>
+				{/if}
+				{#if address}
+					<p class="address">{address}</p>
+				{/if}
+				<LinkWithIcon icon="mail" href="mailto:{email}">{email}</LinkWithIcon>
+			</div>
+			<OpenStreetMap query={address} />
+		</div>
+	</AccordionItem>
+	{#if geo}
+		<AccordionItem id="geo" name="geolocation" noPadding>
+			<div class="map">
+				<OpenStreetMap ll={geo.ll} />
+			</div>
+		</AccordionItem>
+	{/if}
+</Accordion>
+
+<style>
+	.org-name {
+		font-size: 1.5rem;
+		font-weight: 500;
+		margin-bottom: 0em;
+	}
+	.org-asn {
+		margin: 0.5em 0;
+		font-size: 0.75rem;
+	}
+	.owner-map {
+		display: grid;
+	}
+	.owner-map .details {
+		align-self: center;
+		margin: 1rem 0.5rem;
+	}
+	.owner-map :global(.map-wrapper) {
+		grid-row: 1;
+	}
+	.owner-map :global(.map-wrapper.loaded) {
+		min-height: 15rem;
+	}
+	@media screen and (min-width: 600px) {
+		.owner-map:has(.map-wrapper) {
+			grid-template-columns: 1fr 1fr;
+		}
+		.owner-map :global(.map-wrapper) {
+			grid-column: 2;
+		}
+	}
+</style>

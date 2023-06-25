@@ -10,3 +10,25 @@ Information given includes:
 - GeoIP lookups
 
 _More to come..._
+
+## License
+
+Copyright (C) [Besties](https://besties.house) 2023
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+The version of the project released before June, 2023 was released into the public domain.
+For the public domain version, see https://git.gay/besties/wandering-eye/src/commit/d8337b404eb71a8f88e72147e4ff6f188dba3a43
+
+wandering-eye makes use of some 3rd party assets. [Attributions can be read here](src/routes/%28app%29/docs/attributions/+page.md).
