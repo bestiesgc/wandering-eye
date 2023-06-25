@@ -1,4 +1,5 @@
 <script>
+	import { page } from '$app/stores'
 	import { browser } from '$app/environment'
 	import DomainResult from '$lib/DomainResult.svelte'
 	import Accordion from '$lib/Accordion.svelte'
@@ -43,6 +44,26 @@
 		updateNameservers(data.whois['Name Server'])
 	}
 </script>
+
+<svelte:head>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.origin} />
+	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:url" content={$page.url.origin} />
+	<title>{data.query} - wandering-eye</title>
+	<meta name="title" content="{data.query} - wandering-eye" />
+	<meta property="og:title" content="{data.query} - wandering-eye" />
+	<meta property="twitter:title" content="{data.query} - wandering-eye" />
+	<meta name="description" content="Easily find information on any domain." />
+	<meta
+		property="og:description"
+		content="Easily find information on any domain."
+	/>
+	<meta
+		property="twitter:description"
+		content="Easily find information on any domain."
+	/>
+</svelte:head>
 
 <div class="results" class:results-has-nameservers={nameservers}>
 	<div class="main-result">

@@ -2,6 +2,10 @@
 	import { page } from '$app/stores'
 </script>
 
+<svelte:head>
+	<title>{$page.status} - wandering-eye</title>
+</svelte:head>
+
 <div class="error">
 	<p class="error-title">{$page.status}: {$page.error.message}</p>
 	{#if page.status == 404}

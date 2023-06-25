@@ -1,7 +1,50 @@
 <script>
+	export let title = null
+	export let description = null
+	export let image = null
 	import { page } from '$app/stores'
-	console.log()
 </script>
+
+<svelte:head>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.origin} />
+	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:url" content={$page.url.origin} />
+
+	{#if title}
+		<title>{title} - wandering-eye docs</title>
+		<meta name="title" content="{title} - wandering-eye docs" />
+		<meta
+			property="og:title"
+			content="Meta Tags — Preview, Edit and Generate"
+		/>
+		<meta
+			property="twitter:title"
+			content="Meta Tags — Preview, Edit and Generate"
+		/>
+	{:else}
+		<title>wandering-eye docs</title>
+		<meta name="title" content="wandering-eye docs" />
+		<meta property="og:title" content="wandering-eye docs" />
+		<meta property="twitter:title" content="wandering-eye docs" />
+	{/if}
+	<meta
+		name="description"
+		content={description ?? 'Easily find information on any domain.'}
+	/>
+	<meta
+		property="og:description"
+		content={description ?? 'Easily find information on any domain.'}
+	/>
+	<meta
+		property="twitter:description"
+		content={description ?? 'Easily find information on any domain.'}
+	/>
+	{#if image}
+		<meta property="og:image" content={image} />
+		<meta property="twitter:image" content={image} />
+	{/if}
+</svelte:head>
 
 <div class="article-wrapper">
 	<nav aria-label="secondary">
