@@ -30,3 +30,5 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 The version of the project released before June, 2023 was released into the public domain.
 For the public domain version, see https://git.gay/besties/wandering-eye/src/commit/d8337b404eb71a8f88e72147e4ff6f188dba3a43
+
+wandering-eye makes use of some 3rd party assets. [Attributions can be read here](src/routes/%28app%29/docs/attributions/+page.md).
