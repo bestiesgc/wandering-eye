@@ -58,7 +58,10 @@
 		{:else}
 			<div class="item">
 				<p class="list-title">Couldn't find this domain.</p>
-				<p>it may be available?</p>
+				<p>
+					It may be available. If you're sure this is an active domain, try
+					again in a moment.
+				</p>
 			</div>
 		{/if}
 	</div>
