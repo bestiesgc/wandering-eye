@@ -1,58 +1,100 @@
 <script>
-	import Leaflet from './Leaflet.svelte'
-	export let ip
+	import Accordion from '$lib/Accordion.svelte'
+	import AccordionItem from '$lib/AccordionItem.svelte'
+	import LinkWithIcon from '$lib/LinkWithIcon.svelte'
+	import OpenStreetMap from '$lib/OpenStreetMap.svelte'
+	export let whois
+	export let geo = null
+
+	let duplicatedEntries1 = (whois.org ?? whois.country)?.split(' ').length ?? 1
+	let duplicatedEntries2 = whois.mntRef?.split(' ').length ?? 1
+	console.log(duplicatedEntries1)
+
+	const email = (whois.abuseMailbox ?? whois.orgAbuseEmail)?.split(' ')[0]
+
+	// TODO:
+	// So, whois.address entries are duplicated in whois-json output
+	// I tried fixing this with a .slice based on the calculated length of one individual part, but
+	// it turns out the duplicates aren't quite the same sometimes.
+	// fixing might require a PR to whois-json, ill be looking into this later
+	// for now, borked addresses
+	let address = whois.address
+	if (whois.city) {
+		address += ' ' + whois.city
+	}
+	if (whois.stateProv) {
+		address += ' ' + whois.stateProv
+	}
+	if (whois.country) {
+		address += ' ' + whois.country
+	}
 </script>
 
-<div class="ip-container" class:has-geo={ip.geo}>
-	{#if ip.geo}
-		<Leaflet ll={ip.geo.ll} />
-	{/if}
-	<div class="ip-meta">
-		<h4 class="ip-meta_address">{ip.value}</h4>
-		{#if ip.whois?.Organization}
-			<hr />
-			{#if ip.type}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Type</span>
-					<span class="labelled-text">{ip.type}</span>
-				</div>
-			{/if}
-			{#if ip.hostname}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Hostname(s)</span>
-					<span class="labelled-text">{ip.hostname}</span>
-				</div>
-			{/if}
-			<div class="labelled-text-wrapper">
-				<span class="text-label">Organization</span>
-				<span class="labelled-text">{ip.whois.Organization}</span>
-			</div>
-			{#if ip.whois.Updated}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Updated</span>
-					<span class="labelled-text">{ip.whois.Updated}</span>
-				</div>
-			{/if}
-			{#if ip.whois.contactAbuse?.OrgAbuseEmail}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">Abuse Contact</span>
-					<span class="labelled-text"
-						>{ip.whois.contactAbuse.OrgAbuseEmail}</span
-					>
-				</div>
-			{/if}
-			{#if ip.abuse.abuseipdb}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">AbuseIPDB Reports</span>
-					<span class="labelled-text">{ip.abuse.abuseipdb}</span>
-				</div>
-			{/if}
-			{#if ip.abuse.urlhaus}
-				<div class="labelled-text-wrapper">
-					<span class="text-label">URLHaus Reports</span>
-					<span class="labelled-text">{ip.abuse.urlhaus}</span>
-				</div>
-			{/if}
+<Accordion>
+	<AccordionItem id="info" name="Info" open>
+		{#if whois.inetnum}
+			<p class="range">{whois.inetnum}</p>
 		{/if}
-	</div>
-</div>
+		<p class="block">{whois.route ?? whois.cidr}</p>
+	</AccordionItem>
+	<AccordionItem id="owner" name="Owner" noPadding>
+		<div class="owner-map">
+			<div class="details">
+				<p class="org-name">
+					{whois.orgName.slice(0, whois.orgName.length / duplicatedEntries2)}
+				</p>
+				<p class="address">{address}</p>
+				<LinkWithIcon icon="mail" href="mailto:{email}">{email}</LinkWithIcon>
+			</div>
+			<div class="map">
+				<OpenStreetMap query={address} />
+			</div>
+		</div>
+	</AccordionItem>
+	{#if geo}
+		<AccordionItem id="geo" name="Geo location" noPadding>
+			<div class="map">
+				<OpenStreetMap ll={geo.ll} />
+			</div>
+		</AccordionItem>
+	{/if}
+</Accordion>
+
+<style>
+	.org-name {
+		font-size: 1.5rem;
+		font-weight: 500;
+		margin-bottom: 0.5rem;
+	}
+	.owner-map {
+		display: grid;
+	}
+	.owner-map .details {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 1rem 0.5rem;
+	}
+	.owner-map .details p {
+		margin: 0;
+	}
+	.map {
+		height: 100%;
+		min-height: 15rem;
+	}
+	.map :global(.map-wrapper) {
+		height: 100%;
+	}
+	.owner-map .map {
+		grid-row: 1;
+	}
+	@media screen and (min-width: 600px) {
+		.owner-map:has(.map) {
+			grid-template-columns: 20rem 1fr;
+		}
+		.owner-map .map {
+			grid-column: 2;
+		}
+	}
+</style>

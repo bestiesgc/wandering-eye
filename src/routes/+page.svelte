@@ -9,7 +9,7 @@
 
 <CenterPage>
 	<h1>wandering-eye</h1>
-	<p>Easily retrieve information on any domain.</p>
+	<p>easily retrieve information on any domain.</p>
 	<br />
 	<DomainSearch />
 	<br />
@@ -18,3 +18,10 @@
 		<a href="https://git.gay/besties/wandering-eye">source</a>
 	</p>
 </CenterPage>
+
+<style>
+	.smalltext {
+		font-size: 0.8rem;
+		color: var(--grey-300);
+	}
+</style>

@@ -1,21 +1,33 @@
 import { json, error } from '@sveltejs/kit'
 import net from 'node:net'
-import lookup from '$lib/server/lookup.js'
+import geoip from 'geoip-lite'
+import whois from 'whois-json'
+
+function isIp(query) {
+	let isIp = net.isIP(query)
+	if (isIp == 4 || isIp == 6) return true
+	return false
+}
 
 export async function GET({ url }) {
-	const queryDomain = url.searchParams.get('domain')
-	if (!queryDomain) {
-		throw error(400, 'noQueryDomain')
+	const query = url.searchParams.get('q')
+	if (!query) {
+		throw error(400, 'noQuery')
+	}
+	const whoisData = await whois(query)
+	const ip = isIp(query)
+	let geo = null
+	if (ip) {
+		const geoLookup = await geoip.lookup(query)
+		if (geoLookup && geoLookup.ll[0] != 37.751 && geoLookup.ll[1] != -97.822) {
+			geo = geoLookup
+		}
 	}
 
-	let isIp = net.isIP(queryDomain)
-	if (isIp == 4 || isIp == 6) isIp = true
-	else isIp = false
-
-	try {
-		return json(await lookup(queryDomain, isIp))
-	} catch (err) {
-		console.log(err)
-		throw error(500, err.message || err.code)
-	}
+	return json({
+		query,
+		whois: whoisData,
+		geo,
+		isIp: ip
+	})
 }

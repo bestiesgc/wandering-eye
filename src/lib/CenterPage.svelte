@@ -8,3 +8,14 @@
 		<slot />
 	</div>
 </div>
+
+<style>
+	.center-page-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 2rem;
+		min-height: 100vh;
+		min-height: 100svh;
+	}
+</style>
