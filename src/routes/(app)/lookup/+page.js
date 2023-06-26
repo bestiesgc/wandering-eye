@@ -6,7 +6,7 @@ export async function load({ url, fetch, setHeaders }) {
 	const resp = await fetch(`/api/lookup?q=${encodeURIComponent(query)}`)
 	const data = await resp.json()
 	if (resp.ok) {
-		if (!data.whois['Domain Name']) {
+		if (!data.isIp && !data.whois['Domain Name']) {
 			throw error(404, "Couldn't find this domain.")
 		}
 		setHeaders({
