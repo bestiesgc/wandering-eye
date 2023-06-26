@@ -6,10 +6,11 @@
 	import OpenStreetMap from '$lib/OpenStreetMap.svelte'
 	import countrycodes from '$lib/countrycodes.js'
 	export let whois
+	export let id = ''
 </script>
 
 <Accordion>
-	<AccordionItem id="info" name="info" open>
+	<AccordionItem id="{id}info" name="info" open>
 		{#if whois['Created Date']}
 			<p class="creation-date">
 				Registered <Timestamp time={new Date(whois['Created Date'])} />
@@ -22,7 +23,7 @@
 		{/if}
 	</AccordionItem>
 	{#if whois.Registrar}
-		<AccordionItem id="registrar" name="registrar" open>
+		<AccordionItem id="{id}registrar" name="registrar" open>
 			<div class="contents">
 				{#if whois.Registrar}
 					<p class="registrar-name">{whois.Registrar}</p>
@@ -47,7 +48,7 @@
 		</AccordionItem>
 	{/if}
 	{#if whois['Registrant Country'] || (whois['Registrant Organization'] ?? whois['Registrant Name'])}
-		<AccordionItem id="owner" name="owner" open noPadding>
+		<AccordionItem id="{id}owner" name="owner" open noPadding>
 			<div class="owner-map">
 				<div class="details">
 					{#if whois['Registrant Organization'] ?? whois['Registrant Name']}

@@ -70,10 +70,10 @@
 	<div class="main-result">
 		<div class="item">
 			{#if data.isIp}
-				<IpResult geo={data.geo} whois={data.whois} />
+				<IpResult id="mainresult" geo={data.geo} whois={data.whois} />
 			{:else}
 				<p class="list-title">{data.whois['Domain Name']}</p>
-				<DomainResult whois={data.whois} />
+				<DomainResult id="mainresult" whois={data.whois} />
 			{/if}
 		</div>
 	</div>
@@ -83,8 +83,13 @@
 			{#if nameservers.length > 0}
 				<Accordion>
 					{#each nameservers as nameserver, i}
-						<AccordionItem name={nameserver.fromDomain} open={i == 0}>
+						<AccordionItem
+							id="accordion-nameserver-ip-{i}"
+							name={nameserver.fromDomain}
+							open={i == 0}
+						>
 							<IpResult
+								id="nameserver-ip-{i}"
 								geo={nameserver.lookup.geo}
 								whois={nameserver.lookup.whois}
 								close={i != 0}

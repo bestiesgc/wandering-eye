@@ -6,6 +6,7 @@
 	export let whois
 	export let geo = null
 	export let close = false
+	export let id = ''
 
 	const email =
 		whois.contactAbuse?.OrgAbuseEmail ??
@@ -25,7 +26,7 @@
 </script>
 
 <Accordion>
-	<AccordionItem id="info" name="info" open={!close}>
+	<AccordionItem id="{id}info" name="info" open={!close}>
 		{#if whois.range}
 			<p class="range">{whois.range}</p>
 		{/if}
@@ -33,7 +34,7 @@
 			<p class="block">{whois.route ?? whois.cidr}</p>
 		{/if}
 	</AccordionItem>
-	<AccordionItem id="owner" name="owner" open={!close} noPadding>
+	<AccordionItem id="{id}owner" name="owner" open={!close} noPadding>
 		<div class="owner-map">
 			<div class="details">
 				{#if whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
@@ -53,7 +54,7 @@
 		</div>
 	</AccordionItem>
 	{#if geo}
-		<AccordionItem id="geo" name="geolocation" noPadding>
+		<AccordionItem id="{id}geo" name="geolocation" noPadding>
 			<div class="map">
 				<OpenStreetMap ll={geo.ll} />
 			</div>
