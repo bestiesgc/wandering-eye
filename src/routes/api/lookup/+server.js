@@ -32,13 +32,20 @@ export async function GET({ url, setHeaders }) {
 		return json(whoisCache.get(query))
 	}
 	let whoisData
+	const ip = isIp(query)
 	try {
-		whoisData = await whois(query)
-		if (whoisData.error) throw new Error(whoisData.error)
+		const whoisCheck = await whois(query, {
+			timeout: 1000
+		})
+		whoisData = ip
+			? whoisCheck
+			: Object.values(whoisCheck)
+					.reverse()
+					.find(a => !a.error)
+		if (!whoisData) throw new Error(`Couldn't get successful Whois response`)
 	} catch (err) {
 		throw error(500, err.message)
 	}
-	const ip = isIp(query)
 	let geo = null
 	if (ip) {
 		const geoLookup = geoip.lookup(query)
@@ -50,9 +57,7 @@ export async function GET({ url, setHeaders }) {
 
 	const value = {
 		query,
-		whois: ip
-			? whoisData
-			: Object.values(whoisData)[Object.keys(whoisData).length - 1],
+		whois: whoisData,
 		geo,
 		isIp: ip
 	}
