@@ -35,18 +35,20 @@
 	{#await promise}
 		<div class="map-wrapper" />
 	{:then item}
-		<div class="map-wrapper loaded">
-			<iframe
-				title={item.display_name ? item.display_name : 'OpenStreetMap'}
-				frameborder="0"
-				scrolling="no"
-				marginheight="0"
-				marginwidth="0"
-				src="https://www.openstreetmap.org/export/embed.html?bbox={item
-					.boundingbox[2]},{item.boundingbox[0]},{item.boundingbox[3]},{item
-					.boundingbox[1]}&amp;layer=mapnik"
-			/>
-		</div>
+		{#if item}
+			<div class="map-wrapper loaded">
+				<iframe
+					title={item.display_name ? item.display_name : 'OpenStreetMap'}
+					frameborder="0"
+					scrolling="no"
+					marginheight="0"
+					marginwidth="0"
+					src="https://www.openstreetmap.org/export/embed.html?bbox={item
+						.boundingbox[2]},{item.boundingbox[0]},{item.boundingbox[3]},{item
+						.boundingbox[1]}&amp;layer=mapnik"
+				/>
+			</div>
+		{/if}
 	{/await}
 {:else if ll}
 	<div class="map-wrapper loaded">
