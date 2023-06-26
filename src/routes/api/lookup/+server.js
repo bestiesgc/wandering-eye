@@ -12,7 +12,7 @@ const whoisCache = new NodeCache({
 })
 
 function isIp(query) {
-	let isIp = net.isIP(query)
+	const isIp = net.isIP(query)
 	if (isIp == 4 || isIp == 6) return true
 	return false
 }
@@ -42,7 +42,7 @@ export async function GET({ url, setHeaders }) {
 			: Object.values(whoisCheck)
 					.reverse()
 					.find(a => !a.error)
-		if (!whoisData) throw new Error(`Couldn't get successful Whois response`)
+		if (!whoisData) throw new Error("Couldn't get successful Whois response")
 	} catch (err) {
 		throw error(500, err.message)
 	}

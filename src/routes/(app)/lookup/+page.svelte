@@ -13,7 +13,7 @@
 		if (!browser) return
 		if (list?.length > 0) {
 			nameservers = []
-			for (let nameserver of list) {
+			for (const nameserver of list) {
 				const resp = await fetch(
 					`https://dns.google/resolve?${new URLSearchParams({
 						name: nameserver,
