@@ -5,17 +5,23 @@
 	export let city = null
 	export let street = null
 	export let ll = null
+
+	export let visible = true
+
 	async function getItem(query) {
 		if (!query.q) delete query.q
 		const hasItem = localStorage.getItem(JSON.stringify(query))
 		if (hasItem && hasItem != 'undefined') {
-			return JSON.parse(hasItem)
+			const item = JSON.parse(hasItem)
+			visible = item ? true : false
+			return item
 		}
 		const resp = await fetch(
 			`https://nominatim.openstreetmap.org/search?${new URLSearchParams(query)}`
 		)
 		const item = (await resp.json())[0]
 		localStorage.setItem(JSON.stringify(query), JSON.stringify(item))
+		visible = item ? true : false
 		return item
 	}
 	let promise

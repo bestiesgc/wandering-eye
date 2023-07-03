@@ -8,6 +8,8 @@
 	export let close = false
 	export let id = ''
 
+	let ownerSectionHasMap = true
+
 	const email =
 		whois.contactAbuse?.OrgAbuseEmail ??
 		whois.contactAbuse?.RAbuseEmail ??
@@ -35,7 +37,7 @@
 		{/if}
 	</AccordionItem>
 	<AccordionItem id="{id}owner" name="owner" open={!close} noPadding>
-		<div class="owner-map">
+		<div class="owner-map" class:owner-section-has-map={ownerSectionHasMap}>
 			<div class="details">
 				{#if whois.organisation?.['org-name'] ?? whois.organisation?.OrgName}
 					<p class="org-name">
@@ -50,7 +52,7 @@
 				{/if}
 				<LinkWithIcon icon="mail" href="mailto:{email}">{email}</LinkWithIcon>
 			</div>
-			<OpenStreetMap query={address} />
+			<OpenStreetMap bind:visible={ownerSectionHasMap} query={address} />
 		</div>
 	</AccordionItem>
 	{#if geo}
@@ -86,7 +88,7 @@
 		min-height: 15rem;
 	}
 	@media screen and (min-width: 600px) {
-		.owner-map:has(.map-wrapper) {
+		.owner-map.owner-section-has-map {
 			grid-template-columns: 1fr 1fr;
 		}
 		.owner-map :global(.map-wrapper) {

@@ -7,6 +7,8 @@
 	import countrycodes from '$lib/countrycodes.js'
 	export let whois
 	export let id = ''
+
+	let ownerSectionHasMap = true
 </script>
 
 <Accordion>
@@ -49,7 +51,7 @@
 	{/if}
 	{#if whois['Registrant Country'] || (whois['Registrant Organization'] ?? whois['Registrant Name'])}
 		<AccordionItem id="{id}owner" name="owner" open noPadding>
-			<div class="owner-map">
+			<div class="owner-map" class:owner-section-has-map={ownerSectionHasMap}>
 				<div class="details">
 					{#if whois['Registrant Organization'] ?? whois['Registrant Name']}
 						<p class="registrant">
@@ -67,6 +69,7 @@
 				</div>
 				{#if whois['Registrant Street']}
 					<OpenStreetMap
+						bind:visible={ownerSectionHasMap}
 						street={whois['Registrant Street']}
 						city={whois['Registrant City']}
 						state={whois['Registrant State/Province']}
@@ -103,7 +106,7 @@
 		min-height: 15rem;
 	}
 	@media screen and (min-width: 600px) {
-		.owner-map:has(.map-wrapper) {
+		.owner-map.owner-section-has-map {
 			grid-template-columns: 1fr 1fr;
 		}
 		.owner-map :global(.map-wrapper) {
