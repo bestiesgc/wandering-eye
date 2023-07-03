@@ -8,11 +8,12 @@
 	export let data
 
 	let nameservers = null
+	let mainIps = null
 
 	async function updateNameservers(list) {
+		let ips = []
 		if (!browser) return
 		if (list?.length > 0) {
-			nameservers = []
 			for (const nameserver of list) {
 				const resp = await fetch(
 					`https://dns.google/resolve?${new URLSearchParams({
@@ -25,24 +26,24 @@
 					const ipLookup = await fetch(
 						`/api/lookup?q=${encodeURIComponent(Answer[0].data)}`
 					)
-					nameservers.push({
+					ips.push({
 						fromDomain: Answer[0].name,
 						lookup: await ipLookup.json()
 					})
 				}
 			}
-			if (nameservers.length == 0) {
-				nameservers = null
+			if (ips.length == 0) {
 				return
 			}
-			nameservers = nameservers
-		} else {
-			nameservers = null
+			return ips
 		}
 	}
 
 	$: {
-		updateNameservers(data.whois['Name Server'])
+		if (!data.isIp) {
+			nameservers = updateNameservers(data.whois['Name Server'])
+			mainIps = updateNameservers([data.query])
+		}
 	}
 </script>
 
@@ -76,31 +77,64 @@
 				<DomainResult id="mainresult" whois={data.whois} />
 			{/if}
 		</div>
+		{#if mainIps}
+			{#await mainIps}
+				<div class="main-result-ips">
+					<p class="list-title">{data.query}'s A records</p>
+					<p>loading...</p>
+				</div>
+			{:then mainIps}
+				<div class="main-result-ips">
+					<p class="list-title">{data.query}'s A records</p>
+					<Accordion>
+						{#each mainIps as ip, i}
+							<AccordionItem
+								id="accordion-main-result-ips-{i}"
+								name="Server {i + 1}"
+								open={i == 0}
+							>
+								<IpResult
+									id="main-result-ips-{i}"
+									geo={ip.lookup.geo}
+									whois={ip.lookup.whois}
+									close={i != 0}
+								/>
+							</AccordionItem>
+						{/each}
+					</Accordion>
+				</div>
+			{/await}
+		{/if}
 	</div>
 	{#if nameservers}
-		<div class="nameservers">
-			<p class="list-title">nameservers</p>
-			{#if nameservers.length > 0}
-				<Accordion>
-					{#each nameservers as nameserver, i}
-						<AccordionItem
-							id="accordion-nameserver-ip-{i}"
-							name={nameserver.fromDomain}
-							open={i == 0}
-						>
-							<IpResult
-								id="nameserver-ip-{i}"
-								geo={nameserver.lookup.geo}
-								whois={nameserver.lookup.whois}
-								close={i != 0}
-							/>
-						</AccordionItem>
-					{/each}
-				</Accordion>
-			{:else}
+		{#await nameservers}
+			<div class="nameservers">
+				<p class="list-title">nameservers</p>
 				<p>loading...</p>
-			{/if}
-		</div>
+			</div>
+		{:then nameservers}
+			<div class="nameservers">
+				<p class="list-title">nameservers</p>
+				{#if nameservers.length > 0}
+					<Accordion>
+						{#each nameservers as nameserver, i}
+							<AccordionItem
+								id="accordion-nameserver-ip-{i}"
+								name={nameserver.fromDomain}
+								open={i == 0}
+							>
+								<IpResult
+									id="nameserver-ip-{i}"
+									geo={nameserver.lookup.geo}
+									whois={nameserver.lookup.whois}
+									close={i != 0}
+								/>
+							</AccordionItem>
+						{/each}
+					</Accordion>
+				{/if}
+			</div>
+		{/await}
 	{/if}
 </div>
 
@@ -121,6 +155,9 @@
 		width: 100%;
 	}
 	.main-result {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 		width: 100%;
 	}
 	.nameservers {
